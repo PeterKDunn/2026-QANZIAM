@@ -15,7 +15,7 @@ format:
     theme: default
     slide-number: true
     toc: false
-    incremental: true
+    #incremental: true
     smaller: true
     scrollable: true
     math: mathjax
@@ -38,40 +38,46 @@ source("./R/makeImages.R")
 
 ## Data types: Continuous data
 
+::: {.fragment}
 - **Continuous on real line** (e.g., altitude): $Y \in \mathbb{R}$.
-  - [Model using the usual regression models.]{.fragment fragment-index=2}
+  - Model using the usual regression models.
+:::
 
-
-
+::: {.fragment}
 - **Positive continuous** (e.g., yields): $Y\in \mathbb{R}_{+}$.
-  - [gamma regression (e.g., generalized linear models; GLMs).]{.fragment fragment-index=2}
+  - gamma regression (e.g., generalized linear models; GLMs).
+:::
 
-
-
+::: {.fragment}
 - **Proportions** (e.g., cloud cover): $Y\in (0, 1)$.
-  - [beta regression.]{.fragment fragment-index=2}
+  - beta regression.
+:::
 
-
-
+::: {.fragment}
 - **Directions** (e.g., movements of animals): $Y\in (0, 2\pi)$.
-  -  [von Mises regression.]{.fragment fragment-index=2}
+  - von Mises regression.
+:::
 
 
-![](./Icons/iconmonstr-infinity-5-240.png){fig-align="center" width="10%"}
+
+![](./Icons/iconmonstr-infinity-5-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
 ## Data types: Discrete data
 
+::: {.fragment}
 - **Discrete** (e.g., counts of insects): $Y \in \mathbb{N}$
-  - [Poisson regression (also a GLM).]{.fragment fragment-index=2}
+  - Poisson regression (also a GLM).
+:::
 
-
+::: {.fragment}
 - **Binomial counts** (e.g., seed germination): $Y\in \{0, 1, 2, \dots, m\}$.
-  - [logistic regression (also a GLM).]{.fragment fragment-index=2}
+  - logistic regression (also a GLM).
+:::
 
 
-![](./Icons/iconmonstr-layout-grid-filled-240.png){fig-align="center" width="10%"}
+![](./Icons/iconmonstr-layout-grid-filled-240.png){.nostretch .bottom-icon width="10%"}
 
 
 ## Data types: Mixed data
@@ -80,8 +86,9 @@ source("./R/makeImages.R")
 - **Continuous data with exact zeros** (e.g., rainfall): $Y\in \{0\}\cup R_+$.
   - What types of models could we use...?
 
-![](./Icons/iconmonstr-sidebar-collapse-filled-240.png){fig-align="center" width="10%"}
+![](./Icons/iconmonstr-sidebar-collapse-filled-240.png){.nostretch .bottom-icon width="10%"}
 
+::: {.fragment}
 - Continuous data with exact zeros is surprisingly common: 
 
   - Rainfall 
@@ -98,7 +105,7 @@ source("./R/makeImages.R")
   (e.g., @aalenModellingHeterogeneitySurvival1992).
   - Transcriptomics
   (e.g., @mallick2022differential; @wu2023inferring).
-
+:::
 
 
 ## Mixed data: models
@@ -108,64 +115,45 @@ Continuous data with exact zeros can appear for different reasons:
 
 
 :::: {.columns}
-
-::: {.column width="50%"}
+::: {.column width="50%" .fragment}
 
 ![](./Icons/iconmonstr-x-mark-4-240.png){fig-align="center" width="10%"}
 
-- **Censoring**: Data below a threshold are not (or cannot) be recorded.
-- Example:
-
+- **Censoring**: A genuine, natural zero.
+- *Example*: Pollutant or chemical concentrations below the instrument’s detection limit.
 
 :::
 
-::: {.column width="50%"}
-
-![](./Icons/iconmonstr-construction-7-240.png){fig-align="center" width="10%"}
-
+::: {.column width="50%" .fragment}
+![](./Icons/iconmonstr-construction-7-240.png){fig-align="center"  width="10%"}
 
 - **Structure**: The structure of the data naturally leads to mixed data.
-- Example: 
-
+- *Example*: Daily rainfall: \ day with no rain, amount exactly 0; otherwise a positive continuous amount.
 :::
 :::
 
+::: {.fragment}
 Different reasons may lead to different modelling considerations.
+:::
 
 
 
-## Mixed data: single models
+## PG models: development
 
-A **single** probability model for modelling mixed data:
-
-- **Occurrence** and **amount** in one single model: *Poisson--gamma models*.
-  - Fits the GLMs framework [@dunnGeneralizedLinearModels2018]: modelling tools already in place.
-  - Special cases of *Tweedie models* (also called **power-variance** models).
-  - *Explicitly* model continuous data with exact zeros.
-
-
-
-## PG models: development with rainfall
-
-::: {.fragment fragment-index=1}
-::: {.nonincremental}
+::: {.fragment}
 - **Number of precipitation events in any month** $N$.
-  - $N$ has a *Poisson* distribution ($N$ could be zero).
-:::
+  - $N$ has a *Poisson* distribution: $N\sim\text{Pois}(\lambda)$ ($N$ could be zero).
 :::
 
-::: {.fragment fragment-index=2}
-::: {.nonincremental}
+::: {.fragment}
 - **Precipitation amounts** when rain does fall $R$.
-  - Rainfall event $i$ receives rainfall $R_i$; follows a *gamma* distribution $\text{Gam}(-\alpha, \gamma)$.
+  - Rainfall event $i$ receives rainfall $R_i$; *gamma* distribution: $\text{Gam}(-\alpha, \gamma)$.
 
 :::
-:::
 
-::: {.fragment fragment-index=3}
-::: {.nonincremental}
+::: {.fragment}
 
-- **Total monthly precipitation**, $Y$.
+- **_Total_ monthly precipitation**, $Y$.
   - Poisson sum of gamma random variables:
 $$
   Y 
@@ -176,26 +164,31 @@ $$
   \end{cases}
 $$
 :::
-:::
 
-![](./Icons/iconmonstr-weather-15-240.png){fig-align="center" width="10%"}
+
+![](./Icons/iconmonstr-weather-15-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
 ## PG models: development
 
-- The distribution of $Y$ (total monthly precipitation): **Poisson sum of gamma variables**.
-- Distribution can be deduced by working with cumulant generating functions.
-- The resulting probability density function is complicated: **no closed form** (apart from special cases):
+::: {.incremental}
+- The **Poisson sum of gamma variables** distribution: deduced by working with cumulant generating functions.
+- The probability density function is complicated: **no closed form**...
+- ... apart from well-known special cases:
 
+  ::: {.nonincremental}
   - Normal distributions.
   - Gamma distributions.
   - Poisson distributions.
+  :::
 
-- **Poisson--gamma models** belong to the **exponential dispersion model** (EDM) family of distributions...
-- ...so they fit the GLM framework, and **having no closed form density does not matter for fitting GLMs**.
+- **Poisson--gamma models** belong to the **exponential dispersion model** (EDM) family...
+- ...so fit the GLM framework: **having no closed form does not matter for fitting GLMs**.
+:::
 
 
+![](./Icons/tweedie_icon.png){.nostretch .bottom-icon width="10%"}
 
 
 ## PG models
@@ -204,8 +197,8 @@ To **fit** GLMs, only the **mean** and the **variance** needed.
 
 ::: {.fragment fragment-index=1}
 ::: {.nonincremental}
-- All EDMs have **mean** $\text{E}[Y] = \mu$.
-- All EDMs have **variance** $\text{var}[Y] = \phi V(\mu)$, where:
+- _All_ EDMs have **mean** $\text{E}[Y] = \mu$.
+- _All_ EDMs have **variance** $\text{var}[Y] = \phi V(\mu)$, where:
 
   - $\phi > 0$ is some constant (the **dispersion parameter**);
   - $V(\mu)$ is the **variance function**.
@@ -216,7 +209,9 @@ To **fit** GLMs, only the **mean** and the **variance** needed.
 
 ## Tweedie models
 
-| Distribution type    | Var fn $V(\mu)$ |
+::: {.left-table}
+
+| Distribution         | Var fn $V(\mu)$ |
 |----------------------|-----------------|
 | Normal distribution  | $V(\mu) = 1$ |
 | Poisson distribution, if $\phi=1$ | $V(\mu) = \mu$ |
@@ -225,28 +220,25 @@ To **fit** GLMs, only the **mean** and the **variance** needed.
 | 'Equivalent' to $y^* = 1/y$ transform in regression | $V(\mu) = \mu^4$ |
 
 : {tbl-colwidths="[59,23]"}
-
+:::
 
 
 
 
 ## Tweedie models
 
-| Distribution             | Var fn $V(\mu)$                    | $\xi$              |
-|--------------------------|------------------------------------|--------------------|
-| Normal distribution      | $V(\mu) = 1$                       | $\xi = 0$          |
-| Poisson distribution, if $\phi=1$ | $V(\mu) = \mu$  $\xi = 1$ |                    |
-| Gamma distribution       | $V(\mu) = \mu^2$                   | $\xi = 2$          |
-| Inverse Gaussian         | $V(\mu) = \mu^3$                   | $\xi = 3$          |
-| 'Equivalent' to $y^* = 1/y$ transform in regression | $V(\mu) = \mu^4$ | $\xi = 4$ |
-| Tweedie (power-variance) | $V(\mu) = \mu^\xi$                 | $\xi \notin (0,1)$ |
-| $V(\mu) = \mu^\xi$ | $1 < \xi < 2$                            | Poisson--gamma     |
-
-: {tbl-colwidths="[59,23,18]"}
-
-
-- Generally: Tweedie (power-variance) has $V(\mu) = \mu^\xi$ (for $\xi\notin (0,1)$
-  - When $1 < \xi < 2$: Poisson--gamma distributions
+::: {.left-table}
+| Distribution             | Var fn $V(\mu)$    | $\xi$              |
+|--------------------------|--------------------|--------------------|
+| Normal distribution      | $V(\mu) = 1$       | $0$          |
+| Poisson distribution, if $\phi=1$ | $V(\mu) = \mu$ | $1$  |
+| Gamma distribution       | $V(\mu) = \mu^2$   | $2$          |
+| Inverse Gaussian         | $V(\mu) = \mu^3$   | $3$          |
+| 'Equivalent' to $y^* = 1/y$ transform in regression | $V(\mu) = \mu^4$ | $4$ |
+| Tweedie (power-variance) | $V(\mu) = \mu^\xi$ | $\notin (0,1)$ |
+| [Poisson--gamma]{.fragment fragment-index=2} | [$V(\mu) = \mu^\xi$]{.fragment fragment-index=2} | [$\in (1, 2)$]{.fragment fragment-index=2} |
+: {tbl-colwidths="[59,23,10]"}
+:::
 
 
 
@@ -259,8 +251,7 @@ To **fit** GLMs, only the **mean** and the **variance** needed.
 | $0 < \xi < 1$  | **No densities exist**                                                    |
 | $\xi = 1$      | Non-negative discrete; e.g., Poisson ($\xi = 1$ and $\phi = 1$)           |
 | $1 < \xi < 2$  | Mixed on $y \ge 0$ (mass at $y = 0$); Poisson--gamma distributions        |
-| $\xi \ge 2$    | Continuous on $(0, \infty)$                                               |
-|                | e.g.: Gamma ($\xi=2$); inv. Gauss ($\xi = 3$)                             |
+| $\xi \ge 2$    | Continuous on $(0, \infty)$ <br> e.g.: Gamma ($\xi=2$); inv. Gauss ($\xi = 3$)                             |
 
 : {tbl-colwidths="[25,75]"}
 
@@ -294,29 +285,27 @@ The Tweedie family is a three-parameter family of distributions:
 
 ::: {.fragment fragment-index=2}
 ::: {.nonincremental}
-- The estimation of $\mu$ follows the standard GLM algorithms... if $\xi$ is known.
+- The estimation of $\mu$ follows standard GLM algorithms... if $\xi$ is known.
 - Tweedie GLMs can be fitted in Genstat, R, SPSS, etc.
 :::
 :::
 
-![](./Icons/iconmonstr-text-number-list-lined-240.png){fig-align="center" width="10%"}
+![](./Icons/iconmonstr-list-lined-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
 ## Tweedie distributions: evaluation
 
-- Densities evaluation **is not really** necessary for model **fitting**, but the value of $\xi$ should be known.
+- Densities evaluation **not** necessary for model **fitting**, but **is** necessary for
 
-::: {.fragment fragment-index=3}
-::: {.nonincremental}
-- Density evaluating **is** necessary for:
-  - estimating a value for $\xi$ (and hence fitting a model...).
-  - computing quantiles and residuals for model evaluation.
-  - maximum likelihood estimation of $\phi$.
+  ::: {.nonincremental .fragment}
+  - **estimating** a value for $\xi$ (and hence fitting a model...).
+  - **model evaluation**: computing quantiles and residuals.
+  - **estimating $\phi$**: maximum likelihood estimation.
   - and so on...
-:::
-:::
+  :::
 
+![](./Icons/iconmonstr-calculator-2-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
@@ -325,22 +314,21 @@ The Tweedie family is a three-parameter family of distributions:
 *Tweedie densities functions* must be, in general, evaluated numerically:
 
 ::: {.fragment fragment-index=2}
-::: {.nonincremental}
+
 - Saddlepoint *approximation*: can be inaccurate. 
 - Infinite series [@dunnSeriesEvaluationTweedie2005].
 - Infinite oscillating integrals [@dunnEvaluationTweedieExponential2008].
-:::
 :::
 
 *Tweedie cumulative distribution functions* must be, in general, evaluated numerically:
 
 ::: {.fragment fragment-index=3}
-::: {.nonincremental}
 - Saddlepoint *approximation*: can be inaccurate. 
 - Infinite series [@dunnEvaluationTweedieExponentialCDF2026] for $1 <\xi < 2$.
 - Infinite oscillating integrals [@dunnEvaluationTweedieExponentialCDF2026].
 :::
-:::
+
+![](./Icons/iconmonstr-calculator-2-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
@@ -348,17 +336,17 @@ The Tweedie family is a three-parameter family of distributions:
 
 ## Evaluation: infinite series
 
-- The Tweedie densities can be written in terms of infinite series.
-- For $1 < \xi < 2$, these series is in terms of Wright's generalized Bessel function $W(y, \phi, \xi)$:
+- Tweedie densities can be written in terms of infinite series.
+- For $1 < \xi < 2$: in terms of Wright's generalized Bessel function $W(y, \phi, \xi)$:
 $$
   \sum_{j = 1}^\infty 
   \frac{y^{-j(2 - \xi)/(1 - \xi)} (\xi - 1)^{(2 - \xi)/(1 - \xi) j}}
-       {\phi^{j(1-(2 - \xi)/(1 - \xi))}(2 - \xi)^j\, j!\,\Gamma(-j(2 - \xi)/(1 - \xi))}
+       {\phi^{j(1-(2 - \xi)/(1 - \xi))}(2 - \xi)^j\, j!\,\Gamma\big(-j(2 - \xi)/(1 - \xi)\big)}
 $$
 
 - A similar expression exists for $\xi > 2$.
-- Messy, evaluating, in principle, easy: add lots of terms.
-- Sometimes the terms are a *long way* from the start of the series.
+- Messy; evaluating, in principle, easy: add lots of terms.
+- Sometimes the terms are a *long way* from $j = 1$.
 - Sometimes a very large number of terms are needed.
 - So **which** terms, and **how many** terms, must be summed?
 
@@ -371,7 +359,7 @@ We directly sum the infinite series, only over the necessary terms:
 
 ::: {.fragment fragment-index=2}
 ::: {.nonincremental}
-- Using Stirling's approximation for the gamma function, plus use other approximations...
+- Using Stirling's approximation for the gamma function, plus other approximations...
 - ... then treat the index of summation and continuous...
 - ... and differentiation to find where the terms reach a maximum.
 :::
@@ -379,9 +367,13 @@ We directly sum the infinite series, only over the necessary terms:
 
 ::: {.fragment fragment-index=3}
 ::: {.nonincremental}
-Then: sum terms on either side of the maximum until the contributions become negligible.
+Then: sum terms either side of the maximum until the contributions are negligible.
 :::
 :::
+
+
+![](./Icons/iconmonstr-cursor-22-240.png){.nostretch .bottom-icon width="20%"}
+
 
 
 
@@ -405,12 +397,11 @@ Then: sum terms on either side of the maximum until the contributions become neg
 
 ::: {.fragment fragment-index=3}
 ::: {.nonincremental}
-- However, the numerical evaluation can be very tricky.
-  - E.g.: the factorials involving the index $j$ need some attention to be evaluated.
+- Sometimes, the numerical evaluation can be tricky (e.g., factorials involving index $j$).
 :::
 :::
 
-
+![](./Icons/iconmonstr-calculator-2-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
@@ -490,6 +481,12 @@ $$
 
 ## Evaluation: infinite integrals
 
+![](./Images/Integration_integrand.png){fig-align="center"}
+
+
+
+## Evaluation: infinite integrals
+
 ![](./Images/Integration_animation.gif){fig-align="center"}
 
 
@@ -542,11 +539,17 @@ $$
 ::: {.nonincremental}
 **Substantial challenges** when aiming for high accuracy: 
  
-1. The rounding error involved in summing the almost-equal, alternating positive and negative areas can accumulate.
+1. Accumulated rounding error when summing almost-equal, positive and negative areas.
 2. Integrands are not always this nicely behaved...
 :::
 :::
 
+
+::: {.r-stack}
+![](./Icons/iconmonstr-smiley-2-240.png){.fragment .fade-out fragment-index=1 .bottom-icon width="10%"}
+
+![](./Icons/iconmonstr-smiley-4-240.png){.fragment fragment-index=1 .bottom-icon width="10%"}
+:::
 
 
 
@@ -560,14 +563,13 @@ $$
 ::: {.nonincremental}
 **Rounding error**
 
-- The rounding error involved in summing the almost-equal, alternating positive and negative areas can accumulate.
-- **Acceleration** techniques can be used to speed the convergence. 
-- Many acceleration techniques are available, depending on the type of decay behaviour.
+- Accumulated rounding error when summing almost-equal, positive and negative areas.
+- **Numerical acceleration** techniques speed the convergence. 
+- Many acceleration techniques available, depending on the type of decay behaviour.
 - We use Sidi's $W$‑transform (@BIB:Sidi:extrapolation, @BIB:Sidi:veryoscillatory).
 :::
 
-
-
+![](./Icons/iconmonstr-time-19-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
@@ -586,15 +588,14 @@ $$
 
 ## Evaluation: infinite integrals
 
-::: {.nonincremental}
 - **Integrand behaviour**
 
   - Integrands are not always this nicely behaved...
   - Lots of mathematical understanding of the integrand helps.
   - Using some identities to simplify the integrand... sometimes helps.
-:::
 
 
+![](./Icons/iconmonstr-smiley-4-240.png){.nostretch .bottom-icon width="10%"}
 
 
 ## Evaluation: finding the zeros
@@ -609,29 +610,28 @@ $$
 ![](./Images/Integration_Integrand_cosImk_A.png){fig-align="center"}
 
 
+
 # Example
 
 
 
 ## Example: Quiplie rainfall
 
-::: {.nonincremental}
-- Consider Quilpie rainfall.
-:::
+Consider Quilpie rainfall.
 
-::: {.fragment fragment-index=1}
-::: {.nonincremental}
-- **Randomness**: data are mixed, so select a Poisson--gamma probability model.
-- **Structure**: select a log-link function.
-  - This ensures predicted means are always positive values.
-  - This also suits the data.
-  - This means the effect of the covariates $x_j$ on $\mu$ is *multiplicative* not *additive*.
+::: {.incremental}
+- **Randomness**: data mixed: use a Poisson--gamma probability model.
+- **Structure**: log-link function.
+
+
+  ::: {.nonincremental}
+  - Ensures predicted means are always positive values.
+  - Suits the data.
+  - The effect of the covariates $x_j$ on $\mu$ is *multiplicative* not *additive*.
   - As a covariate: use the SOI.
-:::
+  :::
 :::
 
-::: {.fragment fragment-index=2}
-::: {.nonincremental}
 - The model is
 $$
 \begin{cases} 
@@ -639,8 +639,6 @@ $$
   \log \mu_i = \mathbf{X}\vec{\beta} & \text{(systematic)} 
 \end{cases}
 $$
-:::
-:::
 
 
 
@@ -649,35 +647,25 @@ $$
 
 ## Example: process
 
-::: {.nonincremental}
-The **process** for fitting Tweedie GLMs is much like fitting any other GLM, with some idiosyncrasies.
-:::
+::: {.incremental}
+Fitting **process** like fitting other GLMs, with some idiosyncrasies.
 
+1. Determine *which* Tweedie distribution is appropriate (i.e., the value of $\xi$). 
+2. Fit the GLM, usually using a *log* link.
 
-::: {.fragment fragment-index=1}
-::: {.nonincremental}
-- **First**: determine *which* Tweedie distribution is appropriate (i.e., the value of $\xi$). 
-:::
-:::
-
-::: {.fragment fragment-index=2}
-::: {.nonincremental}
-- **Second**: fit the GLM, usually using a *log* link.
-  - The usual Wald tests ($t$-tests) and likelihood ratio tests ($F$-tests) can be used.
-  - The AIC is needed (but requires full likelihood calculations) can be used.
-:::
-:::
-
-::: {.fragment fragment-index=3}
-::: {.nonincremental}
-- **Third**: examine the usual diagnostics (using quantile residuals if possible) can be created.
-:::
+   ::: {.nonincremental}
+   - Usual Wald tests ($t$-tests) and likelihood ratio tests ($F$-tests) can be used.
+   - AIC needs full likelihood calculations.
+   :::
+  
+3. Examine diagnostics (using quantile residuals if possible) to evaluate model.
 :::
 
 
 
 
 
+![](./Icons/iconmonstr-process-1-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
@@ -685,8 +673,7 @@ The **process** for fitting Tweedie GLMs is much like fitting any other GLM, wit
 
 
 ::: {.nonincremental}
-- We'll use total July rainfall at Quilpie, in the file `quilpie.csv`:
-- The data look like this:
+- Total July rainfall at Quilpie:
 :::
 
 ```
@@ -699,6 +686,7 @@ The **process** for fitting Tweedie GLMs is much like fitting any other GLM, wit
 6 1926  9.1  -1.0     4 
 ```
 
+![](./Icons/iconmonstr-weather-15-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
@@ -768,68 +756,67 @@ $$
 
 ## Accuracy
 
-::: {.nonincremental}
-No closed form exists (in general) for the density functions, so we cannot **check the accuracy** of the algorithms and implementation: there is no 'gold standard'.
-:::
-
-::: {.fragment fragment-index=1}
-::: {.nonincremental}
-- We can also confirm that the algorithms:
+- No closed form exists (in general) for the density functions.
+- No 'hold standard' exists for **checking the accuracy** of the algorithms.
+- But, the algorithms:
   - gives accurate results for the closed-form cases ($\xi = 2$ and $\xi = 3$);
   - convergence occurs to machine accuracy where possible;
   - give sensible answers;
   - produce similar answers for **both** the series and inversion methods for the same parameters.
-:::
-:::
-
+  
+![](./Icons/iconmonstr-marketing-20-240.png){.nostretch .bottom-icon width="10%"}
 
 
 ## Packaging
 
 ::: {.nonincremental}
-These algorithms have been prepared and packaged for use in the `tweedie` package [@dunnTweedieTweedieExponential2022].
+Algorithms prepared and packaged for use in the `tweedie` package [@dunnTweedieTweedieExponential2022].
 
 - Freely available on CRAN.
 - Coded in R and FORTRAN.
-- Almost 1 million downloads.
+- Over 1 million downloads.
 :::
 
+![](./Icons/iconmonstr-product-3-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
 ## The hybrid approach
 
 
-::: {.nonincremental}
-We can switch between the **series** and **inversion** methods, and use the most accurate method for any given $(y, \xi, \mu, \phi)$ combinations.
-:::
-
-::: {.fragment fragment-index=1}
-::: {.nonincremental}
-- We are also finalising a **hybrid**, faster approach
-- This is based on storing accurate values of the density.
-- The hybrid approach some Tweedie identities, and accurate interpolation of the stored values.
+- We can switch between the **series** and **inversion** methods, and use the most accurate method for any given $(y, \xi, \mu, \phi)$ combinations.
+- We also have a faster method, using accurate interpolation of the stored values.
 - Much faster, but loses some accuracy in some limiting cases.
-:::
-:::
+
+![](./Icons/iconmonstr-window-8-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
 ## The future
 
-::: {.nonincremental}
 Parts of the parameters space (i.e., $(y, \xi, \mu, \phi)$ combinations) are still challenging for accurate evaluation.
 
-- $\xi\to1$ (Poisson) presents many challenges.
-- $\xi\to2$ (Gamma) presents many challenges.
-- We have plans for exploring these more difficult cases.
-:::
+- $\xi\to1$ (Poisson) presents challenges.
+- $\xi\to2$ (Gamma) presents challenges.
+- Other evaluation method are possible, which may work well and/or faster in parts of parameter space.
+- We have plans for exploring these...
+
+![](./Icons/iconmonstr-glasses-5-240.png){.nostretch .bottom-icon width="10%"}
+
+
+  
+## The future
+
+- The cumulative distribution function (CDF) similarly has no closed forms.
+- About to submit a paper on computational techniques for the CDF.
+- Similar techniques (series; inversion) but numerous differences and mathematical problems.
+
+![](./Icons/iconmonstr-glasses-5-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
 
-
-## References {.scrollable style="font-size: 0.6em;"}
+## References  {.scrollable .smaller .allowframebreaks style="font-size: 0.6em;"}
 
 ::: {#refs}
 :::
