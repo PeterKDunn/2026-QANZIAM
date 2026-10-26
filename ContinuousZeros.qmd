@@ -7,6 +7,9 @@ date: today
 date-format: "D MMMM YYYY"
 format:
   revealjs:
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg-full.js"
     css: ./styles.css
     embed-resources: true
     theme: default
@@ -33,92 +36,68 @@ source("./R/makeImages.R")
 
 # Introduction
 
-## Data types
+## Data types: Continuous data
+
+- **Continuous on real line** (e.g., altitude): $Y \in \mathbb{R}$.
+  - [Model using the usual regression models.]{.fragment fragment-index=2}
 
 
-**Continuous data**
 
-::: {.fragment}
-::: {.nonincremental}
-- **Continuous** (e.g., altitude): $Y \in \mathbb{R}$.
 - **Positive continuous** (e.g., yields): $Y\in \mathbb{R}_{+}$.
+  - [gamma regression (e.g., generalized linear models; GLMs).]{.fragment fragment-index=2}
+
+
+
 - **Proportions** (e.g., cloud cover): $Y\in (0, 1)$.
+  - [beta regression.]{.fragment fragment-index=2}
+
+
+
 - **Directions** (e.g., movements of animals): $Y\in (0, 2\pi)$.
-:::
-:::
+  -  [von Mises regression.]{.fragment fragment-index=2}
 
 
-**Discrete data**
+![](./Icons/iconmonstr-infinity-5-240.png){fig-align="center" width="10%"}
 
-::: {.fragment}
-::: {.nonincremental}
-- **Discrete** (e.g., counts of insects): $Y \in \mathbb{N}$.
+
+
+## Data types: Discrete data
+
+- **Discrete** (e.g., counts of insects): $Y \in \mathbb{N}$
+  - [Poisson regression (also a GLM).]{.fragment fragment-index=2}
+
+
 - **Binomial counts** (e.g., seed germination): $Y\in \{0, 1, 2, \dots, m\}$.
-:::
-:::
+  - [logistic regression (also a GLM).]{.fragment fragment-index=2}
 
 
-**Mixed data**
+![](./Icons/iconmonstr-layout-grid-filled-240.png){fig-align="center" width="10%"}
 
-::: {.fragment}
-::: {.nonincremental}
+
+## Data types: Mixed data
+
+
 - **Continuous data with exact zeros** (e.g., rainfall): $Y\in \{0\}\cup R_+$.
-:::
-:::
+  - What types of models could we use...?
 
+![](./Icons/iconmonstr-sidebar-collapse-filled-240.png){fig-align="center" width="10%"}
 
-## Data types: modelling methods
+- Continuous data with exact zeros is surprisingly common: 
 
-**Continuous data**
-
-::: {.nonincremental}
-- **Continuous**: [regression models.]{.fragment fragment-index=1}
-- **Positive continuous**: [gamma regression (e.g., generalized linear models; GLMs).]{.fragment fragment-index=1}
-- **Proportions**: [e.g., beta regression.]{.fragment fragment-index=1}
-- **Directions**: [e.g., von Mises regression.]{.fragment fragment-index=1}
-:::
-
-
-**Discrete data**
-
-::: {.nonincremental}
-- **Discrete**: [e.g., Poisson regression (also a GLM).]{.fragment fragment-index=2}
-- **Binomial counts**: [e.g., logistic regression (also a GLM).]{.fragment fragment-index=2}
-:::
-
-
-**Mixed data**
-
-::: {.nonincremental}
-- **Continuous data with exact zeros**: [???]{.fragment fragment-index=3}
-:::
-
-
-
-
-## Mixed data: examples
-
-Continuous data with exact zeros is surprisingly common: 
-
-::: {.fragment fragment-index=1}
-::: {.nonincremental}
-
-- Rainfall 
-(e.g., @yunusModellingDailyRainfall2017, @hasanSimplePoissonGamma2010; @dunnPrecipitationOccurrenceAmount2004).
-- Fisheries: Catch per unit effort (CPUE) 
-(e.g., @candyModellingCatchEffort2004; @dunnImprovingComparisonsModels2009).
-- Root length density of apple trees 
-(e.g., @dunnSeriesEvaluationTweedie2005; @silvaAnalysisDistributionRoot1999).
-- Insurance payouts 
-(e.g., @habermanGeneralizedLinearModels1996).
-- Alcohol consumption in teenagers 
-(e.g., @gilchristFittingTweedieModels1999).
-- Survival analysis 
-(e.g., @aalenModellingHeterogeneitySurvival1992).
-- Transcriptomics
-(e.g., @mallick2022differential; @wu2023inferring).
-:::
-:::
+  - Rainfall 
+  (e.g., @yunusModellingDailyRainfall2017, @hasanSimplePoissonGamma2010; @dunnPrecipitationOccurrenceAmount2004).
+  - Fisheries: Catch per unit effort (CPUE) 
+  (e.g., @candyModellingCatchEffort2004; @dunnImprovingComparisonsModels2009).
+  - Root length density of apple trees 
+  (e.g., @dunnSeriesEvaluationTweedie2005; @silvaAnalysisDistributionRoot1999).
+  - Insurance payouts 
+  (e.g., @habermanGeneralizedLinearModels1996).
+  - Alcohol consumption in teenagers 
+  (e.g., @gilchristFittingTweedieModels1999).
+  - Survival analysis 
+  (e.g., @aalenModellingHeterogeneitySurvival1992).
+  - Transcriptomics
+  (e.g., @mallick2022differential; @wu2023inferring).
 
 
 
@@ -127,81 +106,92 @@ Continuous data with exact zeros is surprisingly common:
 
 Continuous data with exact zeros can appear for different reasons:
 
-::: {.fragment fragment-index=2}
-::: {.nonincremental}
 
-- **Censoring**: Data below a certain threshold are not (or cannot) be recorded.
-- **Structure**: The structure of the data naturally leads to the data.
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](./Icons/iconmonstr-x-mark-4-240.png){fig-align="center" width="10%"}
+
+- **Censoring**: Data below a threshold are not (or cannot) be recorded.
+- Example:
+
+
+:::
+
+::: {.column width="50%"}
+
+![](./Icons/iconmonstr-construction-7-240.png){fig-align="center" width="10%"}
+
+
+- **Structure**: The structure of the data naturally leads to mixed data.
+- Example: 
 
 :::
 :::
 
-::: {.fragment fragment-index=3}
-::: {.nonincremental}
-- Different reasons may lead to different modelling considerations.
-:::
-:::
+Different reasons may lead to different modelling considerations.
 
 
 
 ## Mixed data: single models
 
-Although other options are available, a **single** probability model is the preferred approach for modelling mixed data.
+A **single** probability model for modelling mixed data:
 
-- **Occurrence** and **amount** are modelled in one single model.
-- *Poisson--gamma models* (also called *compound Poisson models*) allow for this approach.
-- Poisson--gamma models fit the GLMs framework [@dunnGeneralizedLinearModels2018], so modelling tools already in place.
-- Poisson--gamma models are special cases of *Tweedie models* (also called **power-variance** models).
-- Poisson--gamma models *explicitly* model continuous data with exact zeros.
-
+- **Occurrence** and **amount** in one single model: *Poisson--gamma models*.
+  - Fits the GLMs framework [@dunnGeneralizedLinearModels2018]: modelling tools already in place.
+  - Special cases of *Tweedie models* (also called **power-variance** models).
+  - *Explicitly* model continuous data with exact zeros.
 
 
 
-
-## PG models: development
-
-Consider modelling monthly rainfall.
+## PG models: development with rainfall
 
 ::: {.fragment fragment-index=1}
 ::: {.nonincremental}
 - **Number of precipitation events in any month** $N$.
-  - $N$ has a *Poisson* distribution (and so $N$ could be zero).
+  - $N$ has a *Poisson* distribution ($N$ could be zero).
 :::
 :::
 
 ::: {.fragment fragment-index=2}
 ::: {.nonincremental}
 - **Precipitation amounts** when rain does fall $R$.
-  - Rainfall event $i$ receives rainfall $R_i$, and follows a *gamma* distribution 
+  - Rainfall event $i$ receives rainfall $R_i$; follows a *gamma* distribution $\text{Gam}(-\alpha, \gamma)$.
+
 :::
 :::
 
 ::: {.fragment fragment-index=3}
 ::: {.nonincremental}
-$\text{Gam}(-\alpha, \gamma)$.
+
 - **Total monthly precipitation**, $Y$.
-  - The Poisson sum of the gamma random variables:
+  - Poisson sum of gamma random variables:
 $$
   Y 
   = 
   \begin{cases}
     0                           & \text{if $N = 0$};\\
-    R_1 + R_2 + \cdots + R_N    & \text{if $N > 0$}
+    R_1 + R_2 + \cdots + R_N    & \text{if $N > 0$}.
   \end{cases}
 $$
-   where $N$ has a Poisson distribution with mean $\lambda$.
 :::
 :::
 
-
+![](./Icons/iconmonstr-weather-15-240.png){fig-align="center" width="10%"}
 
 
 
 ## PG models: development
 
-- The distribution of $Y$ (total monthly precipitation) is a **Poisson sum of gamma variables**.
-- This distribution can be deduced by working with cumulant generating functions.
-- The resulting probability density function is complicated: it has **no closed form** (apart from some special cases).
+- The distribution of $Y$ (total monthly precipitation): **Poisson sum of gamma variables**.
+- Distribution can be deduced by working with cumulant generating functions.
+- The resulting probability density function is complicated: **no closed form** (apart from special cases):
+
+  - Normal distributions.
+  - Gamma distributions.
+  - Poisson distributions.
+
 - **Poisson--gamma models** belong to the **exponential dispersion model** (EDM) family of distributions...
 - ...so they fit the GLM framework, and **having no closed form density does not matter for fitting GLMs**.
 
@@ -210,30 +200,7 @@ $$
 
 ## PG models
 
-::: {.fragment fragment-index=1}
-::: {.nonincremental}
-EDMs include distributions such as
-
-  - Normal distributions.
-  - Gamma distributions.
-  - Poisson distributions.
-  - Binomial distributions.
-:::
-:::
-
-::: {.fragment fragment-index=2}
-::: {.nonincremental}
-
-- Since Tweedie models are EDMs, the tools are in place for fitting models, analysing residuals, etc.
-
-:::
-:::
-
-
-
-## PG models
-
-To **fit** GLMs, only the **mean** and the **variance** need to known.
+To **fit** GLMs, only the **mean** and the **variance** needed.
 
 ::: {.fragment fragment-index=1}
 ::: {.nonincremental}
@@ -245,10 +212,19 @@ To **fit** GLMs, only the **mean** and the **variance** need to known.
 :::
 :::
 
-- Poisson--gamma distributions have variance functions $V(\mu) = \mu^\xi$, where $1 < \xi < 2$.
-- More generally, **Tweedie models** have $V(\mu) = \mu^\xi$ for $\xi \notin (0,1)$.
-- **Tweedie EDMs** exist for **all** real values of $\xi$ outside the interval $(0,1)$.
 
+
+## Tweedie models
+
+| Distribution type    | Var fn $V(\mu)$ |
+|----------------------|-----------------|
+| Normal distribution  | $V(\mu) = 1$ |
+| Poisson distribution, if $\phi=1$ | $V(\mu) = \mu$ |
+| Gamma distribution   | $V(\mu) = \mu^2$ |
+| Inverse Gaussian     | $V(\mu) = \mu^3$ |
+| 'Equivalent' to $y^* = 1/y$ transform in regression | $V(\mu) = \mu^4$ |
+
+: {tbl-colwidths="[59,23]"}
 
 
 
@@ -256,19 +232,21 @@ To **fit** GLMs, only the **mean** and the **variance** need to known.
 
 ## Tweedie models
 
-| $\xi$     | Distribution type    | Var fn $V(\mu)$ |
-|-----------|----------------------|-----------------|
-| $\xi = 0$ | Normal distribution  | $V(\mu) = 1$ |
-| $\xi = 1$ | Poisson distribution, if $\phi=1$ | $V(\mu) = \mu$ |
-| $\xi = 2$ | Gamma distribution   | $V(\mu) = \mu^2$ |
-| $\xi = 3$ | Inverse Gaussian     | $V(\mu) = \mu^3$ |
-| $\xi = 4$ | 'Equivalent' to $y^* = 1/y$ transform in regression | $V(\mu) = \mu^4$ |
-| $\xi \notin (0,1)$ | Tweedie (power-variance) | $V(\mu) = \mu^\xi$ |
-| $1 < \xi < 2$ | Poisson--gamma   | $V(\mu) = \mu^\xi$ |
+| Distribution             | Var fn $V(\mu)$                    | $\xi$              |
+|--------------------------|------------------------------------|--------------------|
+| Normal distribution      | $V(\mu) = 1$                       | $\xi = 0$          |
+| Poisson distribution, if $\phi=1$ | $V(\mu) = \mu$  $\xi = 1$ |                    |
+| Gamma distribution       | $V(\mu) = \mu^2$                   | $\xi = 2$          |
+| Inverse Gaussian         | $V(\mu) = \mu^3$                   | $\xi = 3$          |
+| 'Equivalent' to $y^* = 1/y$ transform in regression | $V(\mu) = \mu^4$ | $\xi = 4$ |
+| Tweedie (power-variance) | $V(\mu) = \mu^\xi$                 | $\xi \notin (0,1)$ |
+| $V(\mu) = \mu^\xi$ | $1 < \xi < 2$                            | Poisson--gamma     |
 
-: {tbl-colwidths="[18,59,23]"}
+: {tbl-colwidths="[59,23,18]"}
 
 
+- Generally: Tweedie (power-variance) has $V(\mu) = \mu^\xi$ (for $\xi\notin (0,1)$
+  - When $1 < \xi < 2$: Poisson--gamma distributions
 
 
 
@@ -281,7 +259,8 @@ To **fit** GLMs, only the **mean** and the **variance** need to known.
 | $0 < \xi < 1$  | **No densities exist**                                                    |
 | $\xi = 1$      | Non-negative discrete; e.g., Poisson ($\xi = 1$ and $\phi = 1$)           |
 | $1 < \xi < 2$  | Mixed on $y \ge 0$ (mass at $y = 0$); Poisson--gamma distributions        |
-| $\xi \ge 2$    | Continuous on $(0, \infty)$; e.g. Gamma ($\xi=2$); inv. Gauss ($\xi = 3$) |
+| $\xi \ge 2$    | Continuous on $(0, \infty)$                                               |
+|                | e.g.: Gamma ($\xi=2$); inv. Gauss ($\xi = 3$)                             |
 
 : {tbl-colwidths="[25,75]"}
 
@@ -301,7 +280,7 @@ To **fit** GLMs, only the **mean** and the **variance** need to known.
 
 
 
-## Tweedie distributions: fitting
+## Tweedie distributions
 
 ::: {.fragment fragment-index=1}
 ::: {.nonincremental}
@@ -320,19 +299,19 @@ The Tweedie family is a three-parameter family of distributions:
 :::
 :::
 
-
+![](./Icons/iconmonstr-text-number-list-lined-240.png){fig-align="center" width="10%"}
 
 
 
 ## Tweedie distributions: evaluation
 
-- Evaluating the densities **is not really** necessary for model **fitting**, but the value of $\xi$ should be known.
+- Densities evaluation **is not really** necessary for model **fitting**, but the value of $\xi$ should be known.
 
 ::: {.fragment fragment-index=3}
 ::: {.nonincremental}
-- Evaluating the densities **is** necessary for:
+- Density evaluating **is** necessary for:
   - estimating a value for $\xi$ (and hence fitting a model...).
-  - computing quantile residuals for model evaluation.
+  - computing quantiles and residuals for model evaluation.
   - maximum likelihood estimation of $\phi$.
   - and so on...
 :::
@@ -378,8 +357,9 @@ $$
 $$
 
 - A similar expression exists for $\xi > 2$.
-- The terms are messy, but evaluating a series is, in principle, easy: add lots of terms.
-- But sometimes the necessary terms are a *long way* from the start of the series, and a very large number of terms are needed (many of which are unnecessary).
+- Messy, evaluating, in principle, easy: add lots of terms.
+- Sometimes the terms are a *long way* from the start of the series.
+- Sometimes a very large number of terms are needed.
 - So **which** terms, and **how many** terms, must be summed?
 
 
@@ -387,13 +367,11 @@ $$
 
 ## Evaluation: series strategy
 
-We directly sum the infinite series, but only over the necessary terms.
+We directly sum the infinite series, only over the necessary terms:
 
 ::: {.fragment fragment-index=2}
 ::: {.nonincremental}
-We approximate the terms:
-
-- Using Stirling's approximation for the gamma function and other approximations...
+- Using Stirling's approximation for the gamma function, plus use other approximations...
 - ... then treat the index of summation and continuous...
 - ... and differentiation to find where the terms reach a maximum.
 :::
@@ -401,7 +379,7 @@ We approximate the terms:
 
 ::: {.fragment fragment-index=3}
 ::: {.nonincremental}
-With this maximum, we then sum terms on either side of the maximum until the contributions of the terms become negligible.
+Then: sum terms on either side of the maximum until the contributions become negligible.
 :::
 :::
 
@@ -418,11 +396,9 @@ With this maximum, we then sum terms on either side of the maximum until the con
 
 ## Evaluation: series
 
-But some parameters combinations are trickier:
-
 ::: {.fragment fragment-index=2}
 ::: {.nonincremental}
-- Sometimes, the **number of terms** required in in the thousands.
+- Sometimes, the **number of terms** required is in the thousands.
 - Sometimes, the **terms themselves** don't start making contributions until $j = 100\,000$
 :::
 :::
@@ -436,22 +412,11 @@ But some parameters combinations are trickier:
 
 
 
-## Evaluation: series
-
-![](./Images/Series_Number_Terms.png){fig-align="center"}
-
-
-
-
 
 
 ## Evaluation: series
 
-![](./Images/Series_Highest_Index.png){fig-align="center"}
-
-
-
-
+![](./Images/Range_Index.png){fig-align="center"}
 
 
 
@@ -467,11 +432,13 @@ But some parameters combinations are trickier:
 
 - Fourier inversion of the **Moment Generating Function** $M_Y(t)$:
 $$
+\begin{align*}
   f_Y(y) 
-  = 
-  \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ K_Y(it) - ity]\, dt
-  =
+  &= 
+  \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ K_Y(it) - ity]\, dt\\
+  &=
   \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp k(t)\, dt
+\end{align*}
 $$
 where $i = \sqrt{-1}$, and $K_Y(t) = \log M_Y(t)$ where...
 
@@ -504,14 +471,6 @@ where $i = \sqrt{-1}$, and $K_Y(t) = \log M_Y(t)$ where...
 
 ## Evaluation: infinite integrals
 
-$$
-  f_Y(y) 
-  = 
-  \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ K_Y(it) - ity]\, dt
-  =
-  \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp k(t)\, dt
-$$
-
 - Extracting the **real components**:
 $$
   f_Y(y) 
@@ -519,7 +478,9 @@ $$
   \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ \Re k(t) ]\, \cos \Im k(it) \, dt,
 $$
 
-- The integrand is an **exponentially decaying** (i.e., $\exp[ \Re k(t) ]$) and **oscillating** (i.e., $\cos \Im k(it)$) function.
+- Integrand: 
+  - **exponentially decaying** (i.e., $\exp[ \Re k(t) ]$); and
+  - **oscillating** (i.e., $\cos \Im k(it)$) function.
 
 
 
