@@ -418,7 +418,7 @@ plot(x = tA,
      lwd = 2,
      las = 1,
      col = plot_colour,
-     main = expression(mu==1*";"~phi==1*";"~xi==1.9),
+     main = expression("Integrand:"~mu==1*";"~phi==1*";"~xi==1.9),
      xlab = expression(italic(t)),
      ylab = expression(Expression) )
 abline(h = 0, 
@@ -464,7 +464,7 @@ for (i in 1:(length(Bounds) - 2)) {
   Right <- tA[Bounds[i + 1]]
   Selection <- (tA >= Left) & (tA <= Right)
   
-  if ( i == 2){
+  if ( i == 1){
     polygon(
       x = c(0, tA[Selection]),
       y = c(0, out$IG[Selection]),
@@ -501,6 +501,8 @@ png_files <- c("Integration_integrand_Shaded1.png",
                "Integration_integrand_Shaded14.png")
 gifski(png_files, 
        "Images/Integration_animation.gif", 
+       width = 2400,
+       height = 1500,
        delay = 0.75)
 
 # Delete those pdf files now
@@ -533,7 +535,7 @@ for (i in 1:(length(Bounds) - 2)) {
        lwd = 2,
        las = 1,
        col = plot_colour,
-       main = expression(mu==1*";"~phi==1*";"~xi==1.9),
+       main = expression("Integration:"~mu==1*";"~phi==1*";"~xi==1.9),
        xlab = expression(italic(t)),
        ylab = expression(Expression) )
   abline(h = 0, 
@@ -579,7 +581,7 @@ cat("This area:", AreaR, " (b/t ", Left, Right, "); Total area:", AreaTotal, "\n
     text(x = 30,
          y = 0.5,
          paste("This area:", sprintf("% .3f", AreaR), 
-               "; total:", sprintf("% .3f", AreaTotal) )
+               "; Total area:", sprintf("% .3f", AreaTotal) )
     )
 
   } 
@@ -606,6 +608,8 @@ png_files <- c("Integration_CumIntegrand_Shaded1.png",
                "Integration_CumIntegrand_Shaded14.png")
 gifski(png_files, 
        "Images/IntegrationCumulative_animation.gif", 
+       width = 2400,
+       height = 1500,
        delay = 0.75)
 
 # Delete those pdf files now
@@ -772,7 +776,7 @@ plot(x = j_A,
      type = "h",
      main = "(Normalized) terms in the infinite series",
      xlab = expression(Index~italic(j)),
-     ylab = "Value",
+     ylab = "Value of terms in series",
      col = plot_colour,
      lwd = 2,
      las = 1)
@@ -910,7 +914,7 @@ polygon(x = c( xi_vec,
      las = 1,
 #     type = "l",
      lwd = 3,
-     col = plot_colour
+     col = plot_colour_light
 )
 text(x = 1.6,
      y = 80,
