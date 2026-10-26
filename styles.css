@@ -1,0 +1,29 @@
+
+
+.reveal h1 {
+  color: #1F4E79 !important;
+}
+
+.reveal h2 {
+  color: #1F4E79 !important;
+}
+
+
+.example {
+  border-left: 6px solid #2c7fb8;
+  background-color: #aef7ff;
+  padding: 0.8em;
+  margin: 1em 0;
+  border-radius: 8px;
+}
+
+
+/* Push images to bottom of slide */
+.reveal .slides section {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.reveal .slides section img {
+  margin-top: auto !important;
+}
