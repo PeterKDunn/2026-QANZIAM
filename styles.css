@@ -27,3 +27,39 @@
 .reveal .slides section img {
   margin-top: auto !important;
 }
+
+
+.reveal .left-table table {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+.reveal .left-table tr:has(> td:first-child .fragment:not(.visible)) {
+  visibility: hidden;
+}
+.reveal .left-table tr:has(> td:first-child .fragment:not(.visible)) td {
+  border-style: hidden;
+}
+
+
+.reveal .bottom-icon {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10%;
+}
+
+
+.reveal .slides section:has(.bottom-icon) {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
