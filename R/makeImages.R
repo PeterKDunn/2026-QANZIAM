@@ -453,7 +453,7 @@ for (i in 1:(length(Bounds) - 2)) {
        lwd = 2,
        las = 1,
        col = plot_colour,
-       main = expression(mu==1*";"~phi==1*";"~xi==1.9),
+       main = expression("Integrand:"~mu==1*";"~phi==1*";"~xi==1.9),
        xlab = expression(italic(t)),
        ylab = expression(Expression) )
   abline(h = 0, 
@@ -464,7 +464,7 @@ for (i in 1:(length(Bounds) - 2)) {
   Right <- tA[Bounds[i + 1]]
   Selection <- (tA >= Left) & (tA <= Right)
   
-  if ( i == 1){
+  if ( i == 2){
     polygon(
       x = c(0, tA[Selection]),
       y = c(0, out$IG[Selection]),
@@ -880,6 +880,56 @@ plot(x = xi_vec,
 abline(h = 0,
        col = "grey")
 dev.off() 
+
+
+
+
+png("Images/Range_Index.png",
+    width = 8, 
+    height = 5,
+    units = "in",
+    res = 300)
+
+par(mar = c(5, 5, 4, 2) + 0.1,  # DEFAULT: 5.1 4.1 4.1 2.1
+    mgp = c(4, 1, 0)  ) # DEFAULT: c(3, 1, 0) (axis title, tick labels, axis line)
+options(scipen = 999)
+plot(x = range(xi_vec),
+     y = range( c(lo, hi) ),
+     type = "n",
+     las = 1,
+     log = "y",
+     main = "Range of indicies (log scale)",
+     xlab = expression(xi),
+     ylab = "Index number")
+polygon(x = c( xi_vec,
+            rev(xi_vec) ),
+     y = c( (hi),
+              rev((lo)) ),
+     ylog = TRUE,
+     pch = 19,
+     las = 1,
+#     type = "l",
+     lwd = 3,
+     col = plot_colour
+)
+text(x = 1.6,
+     y = 80,
+     "Lower index limit")
+text(x = 1.6,
+     y = 800,
+     "Upper index limit")
+
+xi_star <- 1.98
+abline(v = xi_star,
+       col = "grey")
+text(x = xi_star,
+     y = 50000,
+     pos = 2,
+     paste("Index range: 4490 to 5616" ))
+
+dev.off() 
+
+
 
 
 
