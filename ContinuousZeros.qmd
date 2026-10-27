@@ -58,7 +58,7 @@ source("./R/makeImages.R")
 :::
 
 ::: {.fragment}
-- **Positive continuous** (e.g., yields): $Y\in \mathbb{R}_{+}$.
+- **Positive continuous** (e.g., crop yields): $Y\in \mathbb{R}_{+}$.
   - Model using gamma regression (a generalized linear model; GLMs).
 :::
 
@@ -131,7 +131,9 @@ Continuous data with exact zeros can appear for different reasons:
 
 ![](./Icons/iconmonstr-flask-6-240.png){fig-align="center" width="10%"}
 
-- **Censoring**: A genuine, natural zero.
+**Censoring**
+
+- A genuine, natural zero.
 - *Example*: Pollutant or chemical concentrations below the instrument’s detection limit.
 
 :::
@@ -139,7 +141,9 @@ Continuous data with exact zeros can appear for different reasons:
 ::: {.column width="50%" .fragment}
 ![](./Icons/iconmonstr-construction-7-240.png){fig-align="center"  width="10%"}
 
-- **Structure**: The structure of the data naturally leads to mixed data.
+**Structure**
+
+- The structure of the data naturally leads to mixed data.
 - *Example*: Daily rainfall: \ day with no rain, amount exactly 0; otherwise a positive continuous amount.
 :::
 :::
@@ -151,7 +155,7 @@ Continuous data with exact zeros can appear for different reasons:
 
 ::: {.fragment}
 - **Number of precipitation events in any month** $N$.
-  - $N$ has a *Poisson* distribution: $N\sim\text{Pois}(\lambda)$ ($N$ could be zero).
+  - $N$ has a *Poisson* distribution: $N\sim\text{Pois}(\lambda)$ (note: $N$ could be zero).
 :::
 
 ::: {.fragment}
@@ -182,9 +186,10 @@ $$
 ## PG models: development
 
 ::: {.incremental}
-- The distribution of a **Poisson sum of gamma variables**: deduced by working with cumulant generating functions.
-- The probability density function is complicated: **no closed form**...
-- ... apart from well-known special cases:
+The probability distribution of a **Poisson sum of gamma variables**: 
+
+- can be deduced by working with cumulant generating functions.
+- is complicated: generally **no closed form** apart from well-known special cases:
 
   ::: {.nonincremental}
   - Normal distributions.
@@ -192,8 +197,7 @@ $$
   - Poisson distributions.
   :::
 
-- **Poisson--gamma models** belong to the **exponential dispersion model** (EDM) family...
-- ...so fit the GLM framework: **having no closed form does not matter for fitting GLMs**.
+- **Poisson--gamma models** belong to the **exponential dispersion model** (EDM) family so fit the GLM framework (@dunnGeneralizedLinearModels2018).
 :::
 
 
@@ -202,17 +206,14 @@ $$
 
 ## PG models
 
-To **fit** GLMs, only the **mean** and the **variance** needed.
-
-::: {.fragment fragment-index=1}
-::: {.nonincremental}
 - _All_ EDMs have **mean** $\text{E}[Y] = \mu$.
 - _All_ EDMs have **variance** $\text{var}[Y] = \phi V(\mu)$, where:
 
+  ::: {.incremental}
   - $\phi > 0$ is some constant (the **dispersion parameter**);
-  - $V(\mu)$ is the **variance function**.
-:::
-:::
+  - $V(\mu)$ is the **variance function**, uniquely defining the EDM distribution.
+  :::
+
 
 
 
@@ -300,10 +301,6 @@ The Tweedie family is a three-parameter family of distributions:
 :::
 
 ::: {.fragment fragment-index=2}
-- Using the rescaling identity can help: $f_{\xi}(y; \mu, \phi) = c\,f_{\xi}(cy; c\mu, c^{2-\xi}\phi)$.
-:::
-
-::: {.fragment fragment-index=3}
 ::: {.nonincremental}
 - The estimation of $\mu$ follows standard GLM algorithms... if $\xi$ is known.
 - Tweedie GLMs can be fitted in Genstat, R, SPSS, etc.
@@ -322,16 +319,19 @@ The Tweedie family is a three-parameter family of distributions:
 
 
 :::: {.columns}
-::: {.column width="50%" .fragment}
-**PDF** $f_{\xi}(y)$, to:
+::: {.column width="45%" .fragment}
+Use **PDF** $f_{\xi}(y)$ to:
 
 - **estimate** a value for $\xi$ (and hence fitting a model...).
 - compute  maximum likelihood estimates.
 - compute the AIC.
 :::
 
-::: {.column width="50%" .fragment}
-**CDF** $F_{\xi}(y)$, to:
+::: {.column width="5%" .fragment}
+:::
+
+::: {.column width="45%" .fragment}
+Use **CDF** $F_{\xi}(y)$ to:
 
 - **evaluate models**: computing quantiles and $p$-values.
 - **compute quantile residuals**.
@@ -348,30 +348,36 @@ The Tweedie family is a three-parameter family of distributions:
 
 ## Tweedie distributions: evaluation
 
-**Tweedie PDFs** must be, in general, evaluated numerically:
 
-::: {.fragment fragment-index=2}
+:::: {.columns}
+::: {.column width="45%" .fragment}
+
+**Tweedie PDFs** must be, in general, evaluated numerically:
 
 - Saddlepoint *approximation*: can be inaccurate. 
 - Infinite series [@dunnSeriesEvaluationTweedie2005].
 - Infinite oscillating integrals [@dunnEvaluationTweedieExponential2008].
 :::
 
+::: {.column width="5%" .fragment}
+:::
+
+::: {.column width="45%" .fragment}
 **Tweedie DFs** must be, in general, evaluated numerically:
 
-::: {.fragment fragment-index=3}
 - Saddlepoint *approximation*: can be inaccurate. 
 - Infinite series [@dunnEvaluationTweedieExponentialCDF2026] for $1 <\xi < 2$.
 - Infinite oscillating integrals [@dunnEvaluationTweedieExponentialCDF2026].
 :::
+::::
 
 ![](./Icons/iconmonstr-calculator-2-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
-# Evaluation: infinite series
+# Evaluation: series
 
-## Evaluation: infinite series
+## Evaluation: series
 
 - Tweedie PDFs can be written as infinite series.
 - For $1 < \xi < 2$: in terms of Wright's generalized Bessel function $W(y, \phi, \xi)$:
@@ -382,7 +388,7 @@ $$
 $$
 
 - A similar expression exists for $\xi > 2$.
-- Messy, but evaluating, in principle, easy: add lots of terms.
+- Messy, but evaluating in principle is easy: add lots of terms.
 - Sometimes the terms are a *long way* from $j = 1$.
 - Sometimes a very large number of terms are needed.
 - So **which** terms, and **how many** terms, must be summed?
@@ -450,9 +456,9 @@ Then: sum terms either side of the maximum until the contributions are negligibl
 ## Evaluation: series performance
 
 - The series method works well: 
-  - only summing positive terms, so machine accuracy is achievable
-- However the number of terms needed grows without bound as $\xi\to 2$ and as $\Pr(Y=0) \to 0$.
-- This means the method becomes very slow.
+  - only summing positive terms, so machine accuracy is achievable.
+- However, the number of necessary terms grows without bound as $\xi\to 2$ and as $\Pr(Y=0) \to 0$.
+- In these cases, the method becomes very slow.
 
 
 ![](./Icons/iconmonstr-resize-11-240.png){.nostretch .bottom-icon width="10%"}
@@ -518,7 +524,7 @@ $$
   \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ \Re k(t) ]\, \cos \Im k(it) \, dt,
 $$
 
-- Integrand: 
+- This is an infinite, oscillating integral:
   - **exponentially decaying** (i.e., $\exp[ \Re k(t) ]$); and
   - **oscillating** (i.e., $\cos \Im k(it)$) function.
 
@@ -604,7 +610,7 @@ $\tfrac{d}{dt} \Im k(t) > 0$; max. value $\ge \pi/2$, so solve $k(t) = \frac{\pi
 
 
 :::: {.columns}
-::: {.column width="45%" .fragment}
+::: {.column width="45%"}
 **In principle**, the algorithm is simple:
 
 - Find the zeros of the integrand...
@@ -670,9 +676,21 @@ Areas as series
 
 **Challenge 2**: Integrand behaviour
 
+:::{.incremental}
 - Integrands are not always this nicely behaved...
 - Lots of mathematical understanding of the integrand helps.
-- Using some identities to simplify the integrand... sometimes helps.
+- Using some identities to simplify the integrand... sometimes helps:
+  $$
+     f_{\xi}(y; \mu, \phi) = c\,f_{\xi}(cy; c\mu, c^{2-\xi}\phi)
+  $$
+  for a constant $c > 0$.
+- For example: using $c = 1/\mu$ means
+  $$
+     f_{\xi}(y; \mu, \phi) = \tfrac{1}{\mu} \, f_{\xi}(y/\mu; 1, c^{2-\xi}\phi).
+  $$
+
+:::
+
 
 
 ![](./Icons/iconmonstr-smiley-4-240.png){.nostretch .bottom-icon width="10%"}
@@ -698,8 +716,9 @@ Oscillations tend to cosine as $t\to\infty$, but this may take a while...
 
 ## Evaluation: Fourier performance
 
-- The Fourier inversion method works well wher eteh series does not: 
+- The Fourier inversion method works well where the series does not: 
   - as $\xi\to 2$ and as $\Pr(Y=0) \to 0$.
+- Using the series and Fourier inversion techniques together essentially cover the entire sample space for accurate evaluation.
 
 
 ![](./Icons/iconmonstr-resize-11-240.png){.nostretch .bottom-icon width="10%"}
@@ -805,8 +824,8 @@ Fitting **process** like fitting other GLMs, with some idiosyncrasies.
 
 $$
 \begin{cases} 
-  Y_i \sim \text{Tweedie}(\mu_i; \xi = 1.4)   & \text{(random)}\\ 
-  \log \mu_i = 2.61 + 0.073\text{SOI}         & \text{(systematic)} 
+  Y_i \sim \text{Tweedie}(\mu_i; \xi = 1.4)           & \text{(random)}\\ 
+  \log \mu_i = 2.61 + (0.073\times\text{SOI})         & \text{(systematic)} 
 \end{cases}
 $$
 
@@ -873,7 +892,7 @@ Algorithms prepared and packaged for use in the `tweedie` package [@dunnTweedieT
 
 - Freely available on CRAN.
 - Coded in R and FORTRAN.
-- Over 1 million downloads.
+- **Over 1 million downloads**.
 :::
 
 ![](./Icons/iconmonstr-product-3-240.png){.nostretch .bottom-icon width="10%"}
