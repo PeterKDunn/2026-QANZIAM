@@ -199,7 +199,7 @@ vr <- tapply(qRain$Rain,
 
 png("Images/Quilpie_logplot.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 plot(log(vr) ~ log(mn),
@@ -223,7 +223,7 @@ dev.off()
 
 png("Images/Quilpie_profileLLH.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 
@@ -317,7 +317,7 @@ out <- tweedie_profile(Rain ~ SOI,
 
 png("Images/Quilpie_profile_plot.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 out <- tweedie_profile(Rain ~ SOI,
@@ -336,7 +336,7 @@ model <- glm(Rain ~ SOI,
 
 png("Images/Quilpie_dataplot.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 
@@ -369,7 +369,7 @@ dev.off()
 
 png("Images/Quilpie_qresiduals.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 
@@ -397,31 +397,43 @@ library(tweedie)
 
 tA = seq(0, 45, 
          length = 5000) 
-out <- tweedie_integrand(y = 1,
-                         mu = 1,
-                         power = 1.9, 
-                         phi = 1,
-                         t = tA,
+out <- tweedie_integrand(y          = 1,
+                         mu         = 1,
+                         power      = 1.9, 
+                         phi        = 1,
+                         t          = tA,
                          whichPlots = NA,
-                         plot_args = list(plot_colour,
+                         plot_args  = list(plot_colour,
                                           lwd = 2) )
 
 png("Images/Integration_integrand.png",
-    width = 8, 
-    height = 5,
-    units = "in",
-    res = 300)
+    width  = 8, 
+    height = 4.25,
+    units  = "in",
+    res    = 300)
 
-plot(x = tA,
-     y = out$IG,
+plot(x    = tA,
+     y    = out$IG,
      type = "l",
-     lwd = 2,
-     las = 1,
-     col = plot_colour,
+     lwd  = 2,
+     las  = 1,
+     col  = plot_colour,
      main = expression("Integrand:"~mu==1*";"~phi==1*";"~xi==1.9),
      xlab = expression(italic(t)),
      ylab = expression(Expression) )
-abline(h = 0, 
+# Envelope
+lines( x   = tA,
+       y   = exp(out$Real),
+       lwd = 2,
+       col = "grey",
+       lty = 2)
+lines( x   = tA,
+       y   = -exp(out$Real),
+       lwd = 2,
+       col = "grey",
+       lty = 2)
+# Axis
+abline(h   = 0, 
        col = "grey")
 
 dev.off()
@@ -442,20 +454,32 @@ Bounds <- c(Integrand_Zeros,
 for (i in 1:(length(Bounds) - 2)) {
   
   png(paste0("Integration_integrand_Shaded",i,".png"),
-      width = 8, 
-      height = 5,
-      units = "in",
-      res = 300)
+      width  = 8, 
+      height = 4.25,
+      units  = "in",
+      res    = 300)
 
-  plot(x = tA,
-       y = out$IG,
+  plot(x    = tA,
+       y    = out$IG,
        type = "l",
-       lwd = 2,
-       las = 1,
-       col = plot_colour,
+       lwd  = 2,
+       las  = 1,
+       col  = plot_colour,
        main = expression("Integrand:"~mu==1*";"~phi==1*";"~xi==1.9),
        xlab = expression(italic(t)),
        ylab = expression(Expression) )
+  # Envelope
+  lines( x   = tA,
+         y   = exp(out$Real),
+         lwd = 2,
+         col = "grey",
+         lty = 2)
+  lines( x   = tA,
+         y   = -exp(out$Real),
+         lwd = 2,
+         col = "grey",
+         lty = 2)
+  # Axis
   abline(h = 0, 
          col = "grey")
   
@@ -466,15 +490,15 @@ for (i in 1:(length(Bounds) - 2)) {
   
   if ( i == 1){
     polygon(
-      x = c(0, tA[Selection]),
-      y = c(0, out$IG[Selection]),
+      x   = c(0, tA[Selection]),
+      y   = c(0, out$IG[Selection]),
       col = plot_colour_light
     )
     
   } else {
     polygon(
-      x = tA[Selection],
-      y = out$IG[Selection],
+      x   = tA[Selection],
+      y   = out$IG[Selection],
       col = plot_colour_light
     )
   }
@@ -501,9 +525,9 @@ png_files <- c("Integration_integrand_Shaded1.png",
                "Integration_integrand_Shaded14.png")
 gifski(png_files, 
        "Images/Integration_animation.gif", 
-       width = 2400,
+       width  = 2400,
        height = 1500,
-       delay = 0.75)
+       delay  = 0.75)
 
 # Delete those pdf files now
 file.remove(list.files(pattern = "\\.png$"))
@@ -518,37 +542,37 @@ par( mar = c(5, 4, 4, 2) + 0.1) # Restore defaults
 ### Shading movie: cumulative regions
 # Find the zeros
 
-AreaR <- 0
+AreaR     <- 0
 AreaTotal <- 0
 
 for (i in 1:(length(Bounds) - 2)) {
   
   png(paste0("Integration_CumIntegrand_Shaded",i,".png"),
-      width = 8, 
-      height = 5,
-      units = "in",
-      res = 300)
+      width  = 8, 
+      height = 4.25,
+      units  = "in",
+      res    = 300)
   
-  plot(x = tA,
-       y = out$IG,
+  plot(x    = tA,
+       y    = out$IG,
        type = "l",
-       lwd = 2,
-       las = 1,
-       col = plot_colour,
+       lwd  = 2,
+       las  = 1,
+       col  = plot_colour,
        main = expression("Integration:"~mu==1*";"~phi==1*";"~xi==1.9),
        xlab = expression(italic(t)),
        ylab = expression(Expression) )
-  abline(h = 0, 
+  abline(h   = 0, 
          col = "grey")
 
   # Envelope
-  lines( x = tA,
-         y = exp(out$Real),
+  lines( x   = tA,
+         y   = exp(out$Real),
          lwd = 2,
          col = "grey",
          lty = 2)
-  lines( x = tA,
-         y = -exp(out$Real),
+  lines( x   = tA,
+         y   = -exp(out$Real),
          lwd = 2,
          col = "grey",
          lty = 2)
@@ -633,12 +657,12 @@ par( mar = c(5, 4, 4, 2) + 0.1) # Restore defaults
 
 par( mar = c(5, 4, 4, 2) + 0.1) # Restore defaults
 
-tC <- seq(0, 20, 
+tC <- seq(0, 10, 
          length = 5000) 
 
-png(paste0("Images/Integration_Integrand_Imk.png"),
+png(paste0("Images/Integration_Integrand_Imk_A.png"),
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 out <- tweedie_integrand(y = 1,
@@ -652,11 +676,60 @@ out <- tweedie_integrand(y = 1,
                                           col = plot_colour))
 dev.off()
 
+
+##
+
+tC <- seq(0, 20, 
+          length = 5000) 
+
+png(paste0("Images/Integration_Integrand_Imk_B.png"),
+    width  = 8, 
+    height = 4.25,
+    units  = "in",
+    res    = 300)
+out <- tweedie_integrand(y          = 0.2,
+                         mu         = 1,
+                         power      = 1.9, 
+                         phi        = 1,
+                         t          = tC,
+                         type       = "PDF",
+                         whichPlots = 1,
+                         plot_args  = list(lwd = 3,
+                                           col = plot_colour))
+dev.off()
+
+
+###
+
+tC <- seq(0, 40, 
+          length = 5000) 
+
+png(paste0("Images/Integration_Integrand_Imk_C.png"),
+    width  = 8, 
+    height = 4.25,
+    units  = "in",
+    res    = 300)
+out <- tweedie_integrand(y          = 0.2,
+                         mu         = 1,
+                         power      = 1.9, 
+                         phi        = 0.25,
+                         t          = tC,
+                         type       = "PDF",
+                         whichPlots = 1,
+                         plot_args  = list(lwd = 3,
+                                           col = plot_colour))
+dev.off()
+
+
+
+
+
+# Cos Im k
 png(paste0("Images/Integration_Integrand_cosImk.png"),
-    width = 8, 
-    height = 5,
-    units = "in",
-    res = 300)
+    width  = 8, 
+    height = 4.25,
+    units  = "in",
+    res    = 300)
 
 out <- tweedie_integrand(y = 1,
                          mu = 1,
@@ -667,6 +740,10 @@ out <- tweedie_integrand(y = 1,
                          plot_args = list(lwd = 3,
                                           col = plot_colour))
 dev.off()
+
+
+
+
 
 
 
@@ -687,9 +764,9 @@ par( mar = c(5, 4, 4, 2) + 0.1) # Restore defaults
 
 tB <- seq(0, 40, 
           length = 500)
-png("Images/Integration_Integrand_Imk_A.png",
+png("Images/Integration_Integrand_Imk_TRICKY.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 out <- tweedie_integrand(y = y,
@@ -704,7 +781,7 @@ dev.off()
 
 png("Images/Integration_Integrand_cosImk_A.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 
@@ -750,7 +827,7 @@ W <- function(xi, phi, j){
 
 xi <- 1.5
 y  <- 0.25
-mu <- 1
+mu <- 5
 phi <- 1
 
 out <- dtweedie_series(y = y, 
@@ -758,7 +835,7 @@ out <- dtweedie_series(y = y,
                        mu = mu, 
                        phi = phi, 
                        details = TRUE)
-j_A <- 1 : (out$hi + 2)
+j_A <- 1 : (out$hi + 1)
 terms <- W(xi = xi, 
            phi = phi,
            j = j_A)
@@ -767,25 +844,37 @@ terms <- W(xi = xi,
 
 png("Images/Series_Easy.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 
-plot(x = j_A,
-     y = terms,
-     type = "h",
-     main = "(Normalized) terms in the infinite series",
-     xlab = expression(Index~italic(j)),
-     ylab = "Value of terms in series",
-     col = plot_colour,
+plot(x       = j_A,
+     y       = log10(terms),
+     type    = "h",
+     main    = "(Normalized) terms in the infinite series",
+     xlab    = expression(Index~italic(j)),
+     ylab    = expression(log[10](Value~of~terms~"in"~series)),
+     col     = plot_colour,
+     sub     = expression("("*xi==1.5*","~y==0.25*","~ mu==5*","~phi==1*")"),
      lwd = 2,
      las = 1)
+# Line for machine accuracy
+aim_accuracy <- 10^(-17)
+abline( h = log10(aim_accuracy),
+        lwd = 2,
+        col = "grey")
+text(x = 4,
+     y = log10(aim_accuracy),
+     pos = 3,
+     "Machine accuracy")
+# Points on each of the sticks
 points(x = j_A,
-       y = terms,
+       y = log10(terms),
        col = plot_colour,
        pch = 19)
+# Horizontal axis
 abline(h = 0,
-       lwd = 2,
+       lwd = 1,
        col = "grey")
 dev.off()     
      
@@ -796,10 +885,10 @@ dev.off()
 
 
 
-
+###
 xi <- 1.999
 y  <- 1
-mu <- 1
+mu <- 5
 phi <- 0.01
 
 out <- dtweedie_series(y = y, 
@@ -816,8 +905,8 @@ terms <- W(xi = xi,
 
 
 y <- 1
-phi <- 0.01
-mu <- 1
+phi <- 0.005
+mu <- 5
 xi_vec <- c(1.001,
             seq(1.1, 1.9, by = 0.05),
             1.95,
@@ -825,7 +914,8 @@ xi_vec <- c(1.001,
             1.97,
             1.98,
             1.99,
-            1.999)
+            1.999
+            )
 num_terms <- lo <- hi <- numeric( length(xi_vec))
 
 for (i in 1:length(xi_vec)){
@@ -840,10 +930,10 @@ for (i in 1:length(xi_vec)){
     
 }
 
-
+# cbind(xi_vec, lo, hi)
 png("Images/Series_Number_Terms.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 plot(x = xi_vec,
@@ -864,7 +954,7 @@ dev.off()
      
 png("Images/Series_Highest_Index.png",
     width = 8, 
-    height = 5,
+    height = 4.25,
     units = "in",
     res = 300)
 
@@ -879,6 +969,7 @@ plot(x = xi_vec,
      lwd = 3,
      col = plot_colour,
      main = "Largest index needed",
+     sub = expression("("*y==1*","~phi==0.01*"*"~mu==1*")"),
      xlab = expression(xi),
      ylab = "Largest index")
 abline(h = 0,
@@ -889,38 +980,40 @@ dev.off()
 
 
 png("Images/Range_Index.png",
-    width = 8, 
-    height = 5,
-    units = "in",
-    res = 300)
+    width  = 8, 
+    height = 4.25,
+    units  = "in",
+    res    = 300)
 
-par(mar = c(5, 5, 4, 2) + 0.1,  # DEFAULT: 5.1 4.1 4.1 2.1
-    mgp = c(4, 1, 0)  ) # DEFAULT: c(3, 1, 0) (axis title, tick labels, axis line)
+par(mar = c(5, 5, 4, 2) + 0.1)  # DEFAULT: 5.1 4.1 4.1 2.1
 options(scipen = 999)
-plot(x = range(xi_vec),
-     y = range( c(lo, hi) ),
+plot(x    = range(xi_vec),
+     y    = range( c(lo, hi) ),
      type = "n",
-     las = 1,
-     log = "y",
+     las  = 1,
+     log  = "y",
      main = "Range of indicies (log scale)",
-     xlab = expression(xi),
-     ylab = "Index number")
-polygon(x = c( xi_vec,
-            rev(xi_vec) ),
-     y = c( (hi),
-              rev((lo)) ),
-     ylog = TRUE,
-     pch = 19,
-     las = 1,
-#     type = "l",
-     lwd = 3,
-     col = plot_colour_light
+     sub  = expression("("*y==1*","~phi==0.005*","~mu==5*")"),
+     ylab = "", # Set properly below
+     xlab = expression(xi))
+title(ylab = expression(Index~number~italic(j)), 
+      line = 4)
+polygon(x    = c( xi_vec,
+                  rev(xi_vec) ),
+        y    = c( (hi),
+                  rev((lo)) ),
+        ylog = TRUE,
+        pch  = 19,
+        las  = 1,
+#        type  = "l",
+        lwd  = 3,
+        col  = plot_colour_light
 )
 text(x = 1.6,
-     y = 80,
+     y = 200,
      "Lower index limit")
 text(x = 1.6,
-     y = 800,
+     y = 1000,
      "Upper index limit")
 
 xi_star <- 1.98
@@ -929,7 +1022,7 @@ abline(v = xi_star,
 text(x = xi_star,
      y = 50000,
      pos = 2,
-     paste("Index range: 4490 to 5616" ))
+     paste("Index range: 9159 to 10,864" ))
 
 dev.off() 
 
