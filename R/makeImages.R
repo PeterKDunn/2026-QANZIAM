@@ -415,7 +415,7 @@ png("Images/Integration_integrand.png",
 plot(x    = tA,
      y    = out$IG,
      type = "l",
-     lwd  = 2,
+     lwd  = 3,
      las  = 1,
      col  = plot_colour,
      main = expression("Integrand:"~mu==1*";"~phi==1*";"~xi==1.9),
@@ -462,7 +462,7 @@ for (i in 1:(length(Bounds) - 2)) {
   plot(x    = tA,
        y    = out$IG,
        type = "l",
-       lwd  = 2,
+       lwd  = 3,
        las  = 1,
        col  = plot_colour,
        main = expression("Integrand:"~mu==1*";"~phi==1*";"~xi==1.9),
@@ -1006,18 +1006,21 @@ polygon(x    = c( xi_vec,
         pch  = 19,
         las  = 1,
 #        type  = "l",
-        lwd  = 3,
+        lwd  = 2,
         col  = plot_colour_light
 )
 text(x = 1.6,
-     y = 200,
+     y = 250,
+     srt = 7,
      "Lower index limit")
 text(x = 1.6,
-     y = 1000,
+     y = 1100,
+     srt = 7,
      "Upper index limit")
 
 xi_star <- 1.98
 abline(v = xi_star,
+       lwd = 2,
        col = "grey")
 text(x = xi_star,
      y = 50000,
