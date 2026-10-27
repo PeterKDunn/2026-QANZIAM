@@ -19,6 +19,20 @@ format:
     smaller: true
     scrollable: true
     math: mathjax
+  beamer:
+      classoption: handout
+# show notes: A notes page AFTER each slide; show notes only: Notes page only; nothing means notes hidden
+      header-includes: |
+        \setbeameroption{show notes}   
+        \setbeamertemplate{footline}[frame number]
+        \AtBeginEnvironment{CSLReferences}{\footnotesize}
+      theme: default          # or Madrid, Boadilla, metropolis, etc.
+      colortheme: default     # e.g. beaver, dolphin, seahorse
+      aspectratio: 169        # 16:9 slides; omit for 4:3
+      incremental: true
+      toc: false
+      navigation: empty       # hides the navigation symbols
+      keep-tex: true          # keeps the .tex file for tweaking
 execute:
   echo: false
   warning: false
@@ -264,7 +278,14 @@ To **fit** GLMs, only the **mean** and the **variance** needed.
 
 ## Power-variance densities: examples
 
+::: {.content-visible when-format="revealjs"}
 ![](./Images/Tweedie_animation.gif){fig-align="center"}
+:::
+
+
+::: {.content-visible when-format="beamer"}
+Tweedie PDF examples
+:::
 
 
 
@@ -487,8 +508,13 @@ $$
 
 ## Evaluation: infinite integrals
 
+::: {.content-visible when-format="revealjs"}
 ![](./Images/Integration_animation.gif){fig-align="center"}
+:::
 
+::: {.content-visible when-format="beamer"}
+Areas in integration
+:::
 
 
 
@@ -577,9 +603,13 @@ $$
 
 ## Evaluation: acceleration techniques
 
+::: {.content-visible when-format="revealjs"}
 ![](./Images/IntegrationCumulative_animation.gif){fig-align="center"}
+:::
 
-
+::: {.content-visible when-format="beamer"}
+Areas as series
+:::
 
 
 
