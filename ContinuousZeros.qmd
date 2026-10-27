@@ -728,58 +728,6 @@ Oscillations tend to cosine as $t\to\infty$, but this may take a while...
 
 # Example
 
-## Example: Quiplie rainfall
-
-Consider Quilpie rainfall.
-
-::: {.incremental}
-- **Randomness**: data mixed: use a Poisson--gamma probability model.
-- **Structure**: log-link function.
-
-
-  ::: {.nonincremental}
-  - Ensures predicted means always positive values.
-  - Suits the data.
-  - The effect of the covariates $x_j$ on $\mu$ is *multiplicative* not *additive*.
-  - As a covariate: use the SOI.
-  :::
-:::
-
-- The model is
-$$
-\begin{cases} 
-  Y_i \sim \text{Tweedie}(\mu_i; \xi) & \text{(random)}\\ 
-  \log \mu_i = \mathbf{X}\vec{\beta} & \text{(systematic)} 
-\end{cases}
-$$
-
-
-
-
-
-
-## Example: process
-
-::: {.incremental}
-Fitting **process** like fitting other GLMs, with some idiosyncrasies.
-
-1. Determine *which* Tweedie distribution is appropriate (i.e., the value of $\xi$). 
-2. Fit the GLM, usually using a *log* link.
-
-   ::: {.nonincremental}
-   - Usual Wald tests ($t$-tests) and likelihood ratio tests ($F$-tests) can be used.
-   - AIC needs full likelihood calculations.
-   :::
-  
-3. Examine diagnostics (using quantile residuals if possible) to evaluate model.
-:::
-
-
-
-
-
-![](./Icons/iconmonstr-process-1-240.png){.nostretch .bottom-icon width="10%"}
-
 
 
 ## Example: the data
@@ -805,6 +753,57 @@ Fitting **process** like fitting other GLMs, with some idiosyncrasies.
 
 
 ![](./Icons/iconmonstr-weather-15-240.png){.nostretch .bottom-icon width="10%"}
+
+
+## Example: Quiplie rainfall
+
+
+- The model is
+$$
+\begin{cases} 
+  Y_i \sim \text{Tweedie}(\mu_i; \xi) & \text{(random)}\\ 
+  \log \mu_i = \mathbf{X}\vec{\beta} & \text{(systematic)} 
+\end{cases}
+$$
+
+
+::: {.incremental}
+- **Randomness**: data mixed: use a Poisson--gamma probability model.
+- **Structure**: log-link function.
+
+
+  ::: {.nonincremental}
+  - Ensures predicted means always positive values.
+  - Suits the data.
+  - The effect of the covariates $x_j$ on $\mu$ is *multiplicative* not *additive*.
+  - As a covariate: use the SOI.
+  :::
+:::
+
+
+
+
+## Example: process
+
+::: {.incremental}
+Fitting **process** like fitting other GLMs, with some idiosyncrasies.
+
+1. Determine *which* Tweedie distribution is appropriate (i.e., the value of $\xi$). 
+2. Fit the GLM, usually using a *log* link.
+
+   ::: {.nonincremental}
+   - Usual Wald tests ($t$-tests) and likelihood ratio tests ($F$-tests) can be used.
+   - AIC needs full likelihood calculations.
+   :::
+  
+3. Examine diagnostics (using quantile residuals if possible) to evaluate model.
+:::
+
+
+
+
+
+![](./Icons/iconmonstr-process-1-240.png){.nostretch .bottom-icon width="10%"}
 
 
 
@@ -863,6 +862,8 @@ $$
 
 
 ## Example: diagnostic analysis
+
+Using quantile residuals (@dunnRandomizedQuantileResiduals1996):
 
 ![](./Images/Quilpie_qresiduals.png){fig-align="center"}
 
