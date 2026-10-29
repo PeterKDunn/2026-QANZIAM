@@ -489,7 +489,7 @@ $$
 $$
 where
 $$
-  \theta = \frac{\mu^{1-\xi}}{1-\xi}, \qquad \kappa(\theta) = \frac{\mu^{2-\xi}}{2-\xi}.
+  \theta = \frac{\mu^{1-\xi} - 1}{1-\xi}, \qquad \kappa(\theta) = \frac{\mu^{2-\xi} - 1}{2-\xi}.
 $$
 
 - $\xi = 1$ (Poisson) and $\xi = 2$ (Gamma) have a closed form: focus is $\xi\ne 1, 2$.
