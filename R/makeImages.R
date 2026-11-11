@@ -1030,12 +1030,206 @@ text(x = xi_star,
 dev.off() 
 
 
+###############################################################################
+
+###############################################################################
+### From teh CDF paper: make_Figure_2_SummationTerms.R
+### Figure in the paper: FIG:SummationTerms
+### Makes: Pics/SummationTerms.pdf
+###
+### Run from the paper's root folder (the one holding Pics/ and Tables/):
+###     source("Pics/make_Figure_2_SummationTerms.R")
+###############################################################################
+
+## Figure: terms of the series for F(y), and the forward difference used to find the peak
+## p = 1.5, mu = 1, phi = 0.002, y = 0.05  (lambda = 1000)
+
+p     <- 1.5
+mu    <- 1
+phi   <- 0.002
+y     <- 0.05
+
+lambda <- mu^(2 - p) / (phi * (2 - p))
+gam    <- phi * (p - 1) * mu^(p - 1)       # gamma scale
+alpha  <- (2 - p) / (1 - p)
+x      <- y / gam
+
+j     <- 1:1750
+logPo <- dpois(j, lambda, log = TRUE)
+logFG <- pgamma(x, shape = -j * alpha, log.p = TRUE)
+logT  <- logPo + logFG
+Pmax  <- max(logPo)
+
+## Forward difference Delta(j) = log T_{j+1} - log T_j (j continuous)
+Delta <- function(jj) {
+  log(lambda / (jj + 1)) +
+    pgamma(x, shape = -(jj + 1) * alpha, log.p = TRUE) -
+    pgamma(x, shape = -jj * alpha, log.p = TRUE)
+}
+
+j0    <- uniroot(Delta, 
+                 c(1, lambda), 
+                 tol = 1e-8)$root
+
+jmax   <- j[which.max(logT)]
+Lmax   <- max(logT)
+summed <- range(j[logT > Lmax - 39])
+
+
+## log10 scale for plotting
+l10 <- 1 / log(10)
+
+
+png("Images/CDFSummationTerms.png",
+    width = 8, 
+    height = 4.25,
+    units = "in",
+    res = 300)
+
+
+###
+## The terms
+par(mar = c(4.5, 5, 1, 1), 
+    las = 1)
+
+xlim <- c(0, 1750)
+ylim <- c(-450, 60)
+
+plot(x    = j, 
+     y    = logT * l10, 
+     type = "n", 
+     xlim = xlim, 
+     ylim = ylim,
+     #xaxt = "n", 
+     xlab = expression(Summation~index~italic(j)), 
+     ylab = expression(log[10]~of~terms) )
+
+# Shade the summed terms
+rect(xleft   = summed[1], 
+     ybottom = ylim[1] - 50, 
+     xright  = summed[2], 
+     ytop    = ylim[2] + 50,
+     col     = "grey90", 
+     border  = NA)
+# The line indicating the rel. accuracy
+abline(h   = (Lmax - 39) * l10, 
+       lty = 4)
+# White background ti place the text in
+xpos   <- 0.65 * max(xlim)
+ypos   <- (Lmax - 39) * l10
+xspace <- 175
+yspace <- 10
+rect(xleft   = xpos - xspace,
+     ybottom = ypos - yspace,
+     xright  = xpos + xspace,
+     ytop    = ypos + yspace,
+     border  = NA,
+     col     = "white")
+text(x    = xpos,
+     y    = ypos,
+     #     pos = 3,
+     cex  = 0.9,
+     expression(italic(e)^{-39} %*% "largest term"))
+
+# Poisson weight
+lines(x   = j, 
+      y   = logPo * l10, 
+      lty = 2, 
+      lwd = 3)
+
+# Incomplete gamma
+lines(x   = j, 
+      y   = logFG * l10, 
+      lty = 3, 
+      lwd = 3)
+
+# The summation terms
+lines(x   = j, 
+      y   = logT  * l10, 
+      lwd = 3)
+box()
+
+# Point mass at j = 0
+points(x   = 0, 
+       y   = -lambda * l10, 
+       pch = 19)                   # point mass at j = 0
+
+text(x   = 0, 
+     y   = -lambda * l10, 
+     pos = 4, 
+     cex = 0.9,
+     expression(Pr(italic(Y) == 0) == exp(-lambda)), 
+)
+
+# Largest terms
+points(x   = jmax, 
+       y   = Lmax * l10, 
+       pch = 21, 
+       bg  = "white", 
+       cex = 1.3)
+# White backgrpound to place text
+xpos   <- jmax * 2.15
+ypos   <- (Lmax * l10)
+xspace <- 60
+yspace <- 10
+rect(xleft   = xpos - xspace,
+     ybottom = ypos - yspace,
+     xright  = xpos + xspace,
+     ytop    = ypos + 3 * yspace,
+     border = NA,
+     col    = "white")
+text(x   = jmax + 10, 
+     y   = Lmax * l10 + 8, 
+     pos = 4, 
+     cex = 0.9,
+     bquote("Largest term: at " * italic(j) == .(jmax)), 
+)
+
+# Largest Poisson weight term
+text(x   = lambda, 
+     y   = Pmax * l10, # Ensure the correct log-scale! 
+     pos = 3, 
+     cex = 0.9,
+     bquote("Largest Poisson weight: at " * italic(j) == .(lambda)),
+)
+points(x   = lambda, 
+       y   = Pmax,
+       pch = 22,
+       cex = 1.3,
+       lwd = 2.5,
+       bg  = "white")
+
+arrows(x0     = summed[1], 
+       y0     = 12, 
+       x1     = summed[2], 
+       y1     = 12, 
+       code   = 3, 
+       angle  = 15,
+       length = 0.10)
+text(x   = mean(summed), 
+     y   = 12, 
+     pos = 3, 
+     cex = 0.9,
+     "Terms summed")
+legend("bottomright", 
+       bg  = "white", 
+       cex = 0.9,
+       lty = c(2, 3, 1),
+       lwd = c(3, 3, 3),
+       legend = c("Poisson weights",
+                  "Incomplete gamma",
+                  "Summation terms"))
+
+dev.off()
+
+cat("lambda =", lambda, " j0 =", j0, " largest term at j =", jmax,
+    " summed range:", summed, "\n")
 
 
 
 
 
-
+###############################################################################
 
 
 # RESTORE
