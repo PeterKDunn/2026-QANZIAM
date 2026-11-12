@@ -54,22 +54,22 @@ source("./R/makeImages.R")
 
 ::: {.fragment}
 - **Continuous on real line** (e.g., altitude): $Y \in \mathbb{R}$.
-  - Model using standard regression models.
+  - Model using a normal distribution (standard regression).
 :::
 
 ::: {.fragment}
 - **Positive continuous** (e.g., crop yields): $Y\in \mathbb{R}_{+}$.
-  - Model using gamma regression (a generalized linear model; GLMs).
+  - Model using gamma distribution (a generalized linear model; GLM).
 :::
 
 ::: {.fragment}
 - **Proportions** (e.g., cloud cover): $Y\in [0, 1]$.
-  - Model using beta regression.
+  - Model using beta distribution.
 :::
 
 ::: {.fragment}
 - **Directions** (e.g., movements of animals): $Y\in [0, 2\pi)$.
-  - Model using von Mises regression.
+  - Model using von Mises distribution.
 :::
 
 
@@ -82,12 +82,12 @@ source("./R/makeImages.R")
 
 ::: {.fragment}
 - **Discrete** (e.g., counts of insects): $Y \in \mathbb{N}$
-  - Model using Poisson regression (a GLM).
+  - Model using Poisson distribution (a GLM).
 :::
 
 ::: {.fragment}
 - **Binomial counts** (e.g., seed germination): $Y\in \{0, 1, 2, \dots, m\}$.
-  - Model using logistic regression (a GLM).
+  - Model using binomial distribution (a GLM).
 :::
 
 
@@ -133,7 +133,7 @@ Continuous data with exact zeros can appear for different reasons:
 
 **Censoring**
 
-- A genuine, natural zero.
+- A detection or measurement limitation.
 - *Example*: Pollutant or chemical concentrations below the instrument’s detection limit.
 
 :::
@@ -197,7 +197,7 @@ The probability distribution of a **Poisson sum of gamma variables**:
   - Poisson distributions.
   :::
 
-- **Poisson--gamma models** belong to the **exponential dispersion model** (EDM) family so fit the GLM framework (@dunnGeneralizedLinearModels2018).
+- **Poisson--gamma models** belong to the **exponential dispersion model** (EDM) family, so fit the GLM framework (@dunnGeneralizedLinearModels2018).
 :::
 
 
@@ -294,7 +294,7 @@ Tweedie PDF examples
 ::: {.nonincremental}
 The Tweedie family is a three-parameter family of distributions:
 
-- $\mu$ (the **mean**);
+- $\mu > 0$ (the **mean**);
 - $\phi > 0$ (the **dispersion parameter**);
 - $\xi$ (the **index parameter**: *which* Tweedie distribution, sometimes denoted as $p$).
 :::
@@ -380,8 +380,7 @@ Use **CDF** $F_{\xi}(y)$ to:
 
 ## PDF evaluation: series
 
-- Tweedie PDFs can be written as infinite series.
-- For $1 < \xi < 2$: in terms of Wright's generalized Bessel function $W(y, \phi, \xi)$:
+- For $1 < \xi < 2$: PDF is written in terms of Wright's generalized Bessel function $W(y, \phi, \xi)$:
 $$
   \sum_{j = 1}^\infty 
   \frac{y^{-j(2 - \xi)/(1 - \xi)} (\xi - 1)^{(2 - \xi)/(1 - \xi) j}}
@@ -389,7 +388,7 @@ $$
 $$
 
 - A similar expression exists for $\xi > 2$.
-- Messy, but evaluating in principle is easy: add lots of terms.
+- Messy, but evaluating in principle is easy: sum over many terms~$j$.
 - Sometimes the terms are a *long way* from $j = 1$.
 - Sometimes a very large number of terms are needed.
 - So **which** terms, and **how many** terms, must be summed?
@@ -432,16 +431,18 @@ Then: sum terms either side of the maximum until the contributions are negligibl
 
 ## PDF evaluation: series
 
+Challenges:
+
 ::: {.fragment fragment-index=2}
 ::: {.nonincremental}
 - Sometimes, the **number of terms** required is in the thousands.
-- Sometimes, the **terms themselves** don't start making contributions until $j = 100\,000$
+- Sometimes, the **contributions** don't start until $j = 100\,000+$.
 :::
 :::
 
 ::: {.fragment fragment-index=3}
 ::: {.nonincremental}
-- Sometimes, the numerical evaluation can be tricky (e.g., factorials involving index $j$).
+- Sometimes, the numerical evaluation is tricky (e.g., factorials involving index~$j$).
 :::
 :::
 
@@ -484,7 +485,7 @@ $$
 \begin{align*}
   M_Y(t) 
    = \mathrm{E}\left[e^{tY}\right]
-  &= \int_{-\infty}^{\infty} e^{ty} f(y)\,dy\\
+  &= \int_{-\infty}^{\infty} e^{ty} f(y)\,dy\quad\text{(by definition)}\\
   &= \exp\left\{\frac{\kappa(\theta + t\phi) - \kappa(\theta)}{\phi}\right\},
 \end{align*}
 $$
@@ -612,25 +613,29 @@ $\tfrac{d}{dt} \Im k(t) > 0$; max. value $\ge \pi/2$, so solve $k(t) = \frac{\pi
 
 :::: {.columns}
 ::: {.column width="45%"}
+![](./Icons/iconmonstr-smiley-2-240.png){fig-align="center" width="30%"}
+
 **In principle**, the algorithm is simple:
 
 - Find the zeros of the integrand...
 - Find the area of each integrand (numerical quadrature)...
 - Sum the areas.
 
-![](./Icons/iconmonstr-smiley-2-240.png){fig-align="center" width="30%"}
+
 :::
 
 ::: {.column width="5%" .fragment}
 :::
 
 ::: {.column width="45%" .fragment}
-**Challenges** when aiming for high accuracy: 
+![](./Icons/iconmonstr-smiley-4-240.png){fig-align="center" width="30%"}
+
+**Challenges**: 
  
-1. Accumulated rounding error when summing almost-equal, positive and negative areas.
+1. Accumulated rounding error summing almost-equal, positive and negative areas.
 2. Integrands are not always nicely behaved...
 
-![](./Icons/iconmonstr-smiley-4-240.png){fig-align="center" width="30%"}
+
 :::
 ::::
 
@@ -646,7 +651,7 @@ $\tfrac{d}{dt} \Im k(t) > 0$; max. value $\ge \pi/2$, so solve $k(t) = \frac{\pi
 ::: {.nonincremental}
 **Challenge 1**: Rounding error
 
-- Accumulated rounding error when summing almost-equal, positive and negative areas.
+- Accumulated rounding error summing almost-equal, positive and negative areas.
 - **Numerical acceleration** techniques speed the convergence. 
 - Many acceleration techniques available, depending on the type of decay behaviour.
 - We use Sidi's $W$‑transform (@BIB:Sidi:extrapolation, @BIB:Sidi:veryoscillatory).
@@ -680,12 +685,12 @@ Areas as series
 :::{.incremental}
 - Integrands are not always this nicely behaved...
 - Lots of mathematical understanding of the integrand helps.
-- Using some identities to simplify the integrand... sometimes helps:
+- Using an identity to simplify the integrand sometimes helps:
   $$
      f_{\xi}(y; \mu, \phi) = c\,f_{\xi}(cy; c\mu, c^{2-\xi}\phi)
   $$
   for a constant $c > 0$.
-- For example: using $c = 1/\mu$ means
+- For example: with $c = 1/\mu$
   $$
      f_{\xi}(y; \mu, \phi) = \tfrac{1}{\mu} \, f_{\xi}(y/\mu; 1, c^{2-\xi}\phi).
   $$
@@ -699,7 +704,7 @@ Areas as series
 
 ## PDF evaluation: finding the zeros
 
-$\tfrac{d}{dt} \Im k(t) < 0$; solve $k(t) = \frac{\pi}{2} + m\pi$ for $m = -1, -1, -1, -2, -2, -2, -3, ...$
+Solve $k(t) = \frac{\pi}{2} + m\pi$ for $m = -1, -1, -1, -2, -2, -2, -3, ...$
 
 
 ![](./Images/Integration_Integrand_Imk_TRICKY.png){fig-align="center"}
@@ -732,7 +737,7 @@ Oscillations tend to cosine as $t\to\infty$, but this may take a while...
 ## DF Evaluation strategies
 
 - A series expression is available for $1 < \xi < 2$; none for $\xi > 2$.
-- For $1 < \xi < 2$: smallest relative error with evaluating series.
+- For $1 < \xi < 2$: smallest relative error by evaluating series.
 - For $\xi > 2$: smallest relative error requires different strategies:
   - Body of distribution: requires Fourier inversion
   - Tails: require direct integration.
@@ -750,11 +755,11 @@ Oscillations tend to cosine as $t\to\infty$, but this may take a while...
 
 ## DF evaluation: strategies for $\xi>2$
 
-- Fourier inversion has similar ideas (zero finding; acceleration).
+- The DF requires high relative accuracy, often in the extreme tails of the distribution.
+- **Fourier inversion** has similar ideas at PDF (zero finding; acceleration).
   - Integrand is a damped sin-curve rather than a damped cos-curve.
-- High relative accuracy is required, and often in the extreme tails of the distribution.
-  - Fourier inversion has good *absolute* accuracy, but not good *relative* accuracy in the extreme tails.
-  - Direct integration is useful here.
+  - But Fourier inversion has good *absolute* accuracy, but not good *relative* accuracy in the extreme tails.
+  - Instead, **direct integration** is useful is the tails.
 
 
 ## DF evaluation: integration for $\xi>2$
@@ -770,23 +775,23 @@ $$
 
 - Dividing by $f_p(y)$ makes the integrand equal to one at $t = y$, so the integral is not extremely small even when the probability is tiny. 
 - Computing the result as $\log f_p(y) + \log \int(\cdot)$ prevents underflow.
-- The values of $f_P(t)$ come from the numerical methods given earlier: 
-  - **Computationally costly**.
-  - Requires very accurate density evaluations!
-- Gauss--Laguerre is efficient for evaluating the integrals in the tails however.
+- The values of $f_p(t)$ come from the numerical methods given earlier: 
+  - **Computationally costly**; requires very accurate density evaluations!
+- However, Gauss--Laguerre is efficient for evaluating the integrals in the tails.
 
 
 
 ## DF evaluation: saddlepoint approx.
 
-- A cheap computational method is the Lugannani--Rice saddlepoint approximation to the distribution function [LugannaniRice1980; Daniels1954]:
-- The saddlepoint, solving $K'(\hat t) = y$, is $\hat t = (y^{1-p} - \mu^{1-p})/\{\phi(1-p)\}$, and
+- A cheap computational method is the Lugannani--Rice saddlepoint approximation to the distribution function [@LugannaniRice1980; @Daniels1954]:
+- The saddlepoint (solving $K'(\hat t) = y$) is $\hat t = (y^{1-p} - \mu^{1-p})/\{\phi(1-p)\}$, and
 $$
-  F(y) \approx \Phi(\hat w) + \varphi(\hat w)\left(\frac{1}{\hat w}-\frac{1}{\hat u}\right),
-  \quad
-  \hat w = \operatorname{sgn}(y-\mu)\sqrt{d(y,\mu)/\phi},
+\begin{aligned}
+  F(y) \approx \Phi(\hat w) + \varphi(\hat w)\left(\frac{1}{\hat w}-\frac{1}{\hat u}\right),\\
+\text{where\ }  \hat w = \operatorname{sgn}(y-\mu)\sqrt{d(y,\mu)/\phi},
   \quad
   \hat u = \hat t\sqrt{\phi V(y)},
+\end{aligned}
 $$
 where $d(y,\mu)$ is the unit deviance, and $\Phi$ and $\varphi$ are the standard normal distribution and density functions.
 - At very small dispersion (i.e., very small $\phi$), the approximation is very accurate, just where the inversion for $p>2$ loses accuracy.
@@ -794,23 +799,28 @@ where $d(y,\mu)$ is the unit deviance, and $\Phi$ and $\varphi$ are the standard
 
 ## DF evaluation: rel. accuracy: $p>2$
 
-Excellent relative accuracy except for extreme cases ($\rho = \mu^{2-\xi}/(\phi(2-\xi))$)
+**Excellent relative accuracy**, generally $10^{-12}$, except for extreme cases:
 
-| **Regime**                 | **Method**                                           | **Worst rel. error** | 
-|----------------------------|------------------------------------------------------|---------------------|
-| $\rho\le 10^4$             | Inversion (tail: integration when prob $<10^{-5}$)   | $4\times 10^{-10}$  |
-| $10^4<\rho\le 10^5$        | Inversion (tail: integration when prob $<10^{-2}$)   | $2\times 10^{-9}$   |
-| $10^5<\rho\le 10^7$        | Integration; saddlepoint in body                     | $2\times 10^{-8}$   |
-| $\rho > 10^7$              | Saddlepoint                                          | $2\times 10^{-8}$   |
-| $y\ll\mu$; $\rho\le 10^4$  | Inversion                                            | $5\times 10^{-1}$ with warning |
+| **Regime**                 | **Method**                                         | **Worst rel. error** | 
+|----------------------------|----------------------------------------------------|---------------------|
+| $\rho\le 10^4$             | Inversion (tail: integrate when prob $<10^{-5}$)   | $4\times 10^{-10}$  |
+| $10^4<\rho\le 10^5$        | Inversion (tail: integrate when prob $<10^{-2}$)   | $2\times 10^{-9}$   |
+| $10^5<\rho\le 10^7$        | Integration (saddlepoint in body)                  | $2\times 10^{-8}$   |
+| $\rho > 10^7$              | Saddlepoint                                        | $2\times 10^{-8}$   |
+| $y\ll\mu$; $\rho\le 10^4$  | Inversion                                          | $5\times 10^{-1}$ with warning |
 
-: {tbl-colwidths="[20,59,21]"}
+: {tbl-colwidths="[22,57,21]"}
 
-
+*Note*:  $\rho = \mu^{2-\xi}/(\phi(2-\xi))$
 
 
 
 ## Example: the data
+
+:::: {.columns}
+::: {.column width="55%"}
+
+
 
 
 ::: {.nonincremental}
@@ -827,12 +837,26 @@ Excellent relative accuracy except for extreme cases ($\rho = \mu^{2-\xi}/(\phi(
 6 1926  9.1  -1.0     4 
 ```
 
+:::
 
-- Small data set: $n = 68$ July totals.
+::: {.column width="5%" .fragment}
+:::
+
+::: {.column width="35%" .fragment}
+
+
+
+- $n = 68$ July totals.
 - Exactly zero rainfall recorded for 20 months (29%).
+
+![](./Icons/iconmonstr-weather-15-240.png){.nostretch .bottom-icon width="10%" fig-align="center"}
+
+:::
+::::
 
 
 ![](./Icons/iconmonstr-weather-15-240.png){.nostretch .bottom-icon width="10%" fig-align="center"}
+
 
 
 ## Example: Quiplie rainfall
@@ -841,20 +865,20 @@ Excellent relative accuracy except for extreme cases ($\rho = \mu^{2-\xi}/(\phi(
 - The model is
 $$
 \begin{cases} 
-  Y_i \sim \text{Tweedie}(\mu_i; \xi) & \text{(random)}\\ 
-  \log \mu_i = \mathbf{X}\vec{\beta} & \text{(systematic)} 
+  Y_i \sim \text{Tweedie}(\mu_i; \xi) & \text{(random component)}\\ 
+  \log \mu_i = \mathbf{X}\vec{\beta} & \text{(systematic component)} 
 \end{cases}
 $$
 
 
 ::: {.incremental}
-- **Randomness**: data mixed: use a Poisson--gamma probability model.
-- **Structure**: log-link function.
+- **Randomness**: mixed data, so use a **Poisson--gamma** probability model.
+- **Systematic**: use *log-link function*:
 
 
   ::: {.nonincremental}
-  - Ensures predicted means always positive values.
-  - Suits the data.
+  - Ensures predicted means $\hat{\mu}_i > 0$.
+  - Appropriate for the data.
   - The effect of the covariates $x_j$ on $\mu$ is *multiplicative* not *additive*.
   - As a covariate: use the SOI.
   :::
@@ -866,17 +890,17 @@ $$
 ## Example: process
 
 ::: {.incremental}
-Fitting **process** like fitting other GLMs, with some idiosyncrasies.
+The fitting **process** is like fitting other GLMs, with some idiosyncrasies.
 
 1. Determine *which* Tweedie distribution is appropriate (i.e., the value of $\xi$). 
-2. Fit the GLM, usually using a *log* link.
+2. Fit the GLM.
+3. Evaluate the model; examine diagnostics (using **quantile residuals**).
 
    ::: {.nonincremental}
    - Usual Wald tests ($t$-tests) and likelihood ratio tests ($F$-tests) can be used.
    - AIC needs full likelihood calculations.
    :::
   
-3. Examine diagnostics (using quantile residuals if possible) to evaluate model.
 :::
 
 
@@ -903,7 +927,7 @@ Fitting **process** like fitting other GLMs, with some idiosyncrasies.
 
 $$
 \begin{cases} 
-  Y_i \sim \text{Tweedie}(\mu_i; \xi = 1.4)           & \text{(random)}\\ 
+  Y_i \sim \text{Tweedie}(\mu_i; \xi = 1.44)          & \text{(random)}\\ 
   \log \mu_i = 2.61 + (0.073\times\text{SOI})         & \text{(systematic)} 
 \end{cases}
 $$
@@ -957,6 +981,7 @@ Using quantile residuals (@dunnRandomizedQuantileResiduals1996):
 
 - No closed form exists (in general) for the PDF or DF.
 - So no 'gold standard' exists for **checking the accuracy and precision** of the algorithms.
+- We can use arbitrary-precision arithmetic to get very precise values.
 - But, the algorithms:
   - give accurate results for the closed-form cases ($\xi = 2$ and $\xi = 3$);
   - convergence occurs to machine accuracy where possible;
@@ -980,12 +1005,6 @@ Algorithms prepared and packaged for use in the `tweedie` package [@dunnTweedieT
 
 
 
-## Combined and faster approach
-
-
-- We can switch between methods, and use the most accurate method for any given $(y, \xi, \mu, \phi)$ combinations.
-- We also have a faster method, using accurate interpolation of stored precise values (to be published).
-- Much faster, but loses some accuracy in some limiting cases.
 
 ![](./Icons/iconmonstr-window-8-240.png){.nostretch .bottom-icon width="10%" fig-align="center"}
 
@@ -993,12 +1012,27 @@ Algorithms prepared and packaged for use in the `tweedie` package [@dunnTweedieT
 
 ## The future
 
+Interpolation method:
+
+- We also have a faster method, using accurate interpolation of stored precise values (yet to be published).
+- Much faster, but loses some accuracy in some limiting cases.
+
 Parts of the parameters space (i.e., $(y, \xi, \mu, \phi)$ combinations) are still challenging for accurate evaluation.
 
 - Other evaluation method are possible, which may work well and/or faster in parts of parameter space.
 - We have plans for exploring these...
 
 ![](./Icons/iconmonstr-glasses-5-240.png){.nostretch .bottom-icon width="10%" fig-align="center"}
+
+
+
+## Details
+
+This talk is available at:
+
+![](./Images/TweedieGithubQR.png){fig-align="center"}
+
+
 
 
 
