@@ -50,6 +50,9 @@
   width: 10%;
 }
 
+.reveal div.quarto-figure:has(.bottom-icon) { position: static; }
+.reveal img.bottom-icon { max-height: none; }
+
 
 .reveal .slides section:has(.bottom-icon) {
   height: 100%;
