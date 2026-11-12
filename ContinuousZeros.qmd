@@ -229,7 +229,7 @@ The probability distribution of a **Poisson sum of gamma variables**:
 | Inverse Gaussian     | $V(\mu) = \mu^3$ |
 | 'Equivalent' to $y^* = 1/y$ transform in regression | $V(\mu) = \mu^4$ |
 
-: {tbl-colwidths="[59,23]"}
+: {tbl-colwidths="[59,26]"}
 :::
 
 
@@ -247,7 +247,7 @@ The probability distribution of a **Poisson sum of gamma variables**:
 | 'Equivalent' to $y^* = 1/y$ transform in regression | $V(\mu) = \mu^4$ | $4$ |
 | Tweedie (power-variance) | $V(\mu) = \mu^\xi$   | $\notin (0,1)$     |
 | [Poisson--gamma]{.fragment fragment-index=2}    | [$V(\mu) = \mu^\xi$]{.fragment fragment-index=2} | [$\in (1, 2)$]{.fragment fragment-index=2} |
-: {tbl-colwidths="[59,23,10]"}
+: {tbl-colwidths="[59,26,10]"}
 :::
 
 
@@ -323,8 +323,8 @@ The Tweedie family is a three-parameter family of distributions:
 Use **PDF** $f_{\xi}(y)$ to:
 
 - **estimate** a value for $\xi$ (and hence fitting a model...).
-- compute  maximum likelihood estimates.
-- compute the AIC.
+- **compute**  maximum likelihood estimates.
+- **compute** the AIC.
 :::
 
 ::: {.column width="5%" .fragment}
@@ -335,7 +335,7 @@ Use **CDF** $F_{\xi}(y)$ to:
 
 - **evaluate models**: computing quantiles and $p$-values.
 - **compute quantile residuals**.
-- generate **random numbers**.
+- **generate** random numbers.
 :::
 
 ::::
@@ -363,7 +363,7 @@ Use **CDF** $F_{\xi}(y)$ to:
 :::
 
 ::: {.column width="45%" .fragment}
-**Tweedie DFs** must be, in general, evaluated numerically [@dunnEvaluationTweedieExponentialCDF2026] :
+**Tweedie DFs** must be evaluated numerically [@dunnEvaluationTweedieExponentialCDF2026] :
 
 - Saddlepoint *approximation*: accurate for small dispersion $\phi$. 
 - Direct integration of the PDF.
@@ -388,7 +388,7 @@ $$
 $$
 
 - A similar expression exists for $\xi > 2$.
-- Messy, but evaluating in principle is easy: sum over many terms~$j$.
+- Messy, but evaluating in principle is easy: sum over many terms $j$.
 - Sometimes the terms are a *long way* from $j = 1$.
 - Sometimes a very large number of terms are needed.
 - So **which** terms, and **how many** terms, must be summed?
@@ -442,7 +442,7 @@ Challenges:
 
 ::: {.fragment fragment-index=3}
 ::: {.nonincremental}
-- Sometimes, the numerical evaluation is tricky (e.g., factorials involving index~$j$).
+- Sometimes, the numerical evaluation is tricky (e.g., factorials involving index $j$).
 :::
 :::
 
@@ -786,14 +786,15 @@ $$
 - A cheap computational method is the Lugannani--Rice saddlepoint approximation to the distribution function [@LugannaniRice1980; @Daniels1954]:
 - The saddlepoint (solving $K'(\hat t) = y$) is $\hat t = (y^{1-p} - \mu^{1-p})/\{\phi(1-p)\}$, and
 $$
-\begin{aligned}
-  F(y) \approx \Phi(\hat w) + \varphi(\hat w)\left(\frac{1}{\hat w}-\frac{1}{\hat u}\right),\\
-\text{where\ }  \hat w = \operatorname{sgn}(y-\mu)\sqrt{d(y,\mu)/\phi},
-  \quad
-  \hat u = \hat t\sqrt{\phi V(y)},
-\end{aligned}
+  F(y) \approx \Phi(\hat w) + \varphi(\hat w)\left(\frac{1}{\hat w}-\frac{1}{\hat u}\right),
 $$
-where $d(y,\mu)$ is the unit deviance, and $\Phi$ and $\varphi$ are the standard normal distribution and density functions.
+where
+$$
+  \hat w = \operatorname{sgn}(y-\mu)\sqrt{d(y,\mu)/\phi},
+  \quad
+  \hat u = \hat t\sqrt{\phi V(y)}:
+$$
+$d(y,\mu)$ is the unit deviance; $\Phi$ and $\varphi$ are the standard normal PDF and DF.
 - At very small dispersion (i.e., very small $\phi$), the approximation is very accurate, just where the inversion for $p>2$ loses accuracy.
 
 
@@ -817,11 +818,9 @@ where $d(y,\mu)$ is the unit deviance, and $\Phi$ and $\varphi$ are the standard
 
 ## Example: the data
 
+
 :::: {.columns}
-::: {.column width="55%"}
-
-
-
+::: {.column width="45%"}
 
 ::: {.nonincremental}
 - Total July rainfall at Quilpie:
@@ -842,14 +841,12 @@ where $d(y,\mu)$ is the unit deviance, and $\Phi$ and $\varphi$ are the standard
 ::: {.column width="5%" .fragment}
 :::
 
-::: {.column width="35%" .fragment}
+::: {.column width="45%" .fragment}
 
 
 
 - $n = 68$ July totals.
 - Exactly zero rainfall recorded for 20 months (29%).
-
-![](./Icons/iconmonstr-weather-15-240.png){.nostretch .bottom-icon width="10%" fig-align="center"}
 
 :::
 ::::
@@ -859,7 +856,7 @@ where $d(y,\mu)$ is the unit deviance, and $\Phi$ and $\varphi$ are the standard
 
 
 
-## Example: Quiplie rainfall
+## Example: Quilpie rainfall
 
 
 - The model is
@@ -1006,10 +1003,6 @@ Algorithms prepared and packaged for use in the `tweedie` package [@dunnTweedieT
 
 
 
-![](./Icons/iconmonstr-window-8-240.png){.nostretch .bottom-icon width="10%" fig-align="center"}
-
-
-
 ## The future
 
 Interpolation method:
@@ -1028,7 +1021,7 @@ Parts of the parameters space (i.e., $(y, \xi, \mu, \phi)$ combinations) are sti
 
 ## Details
 
-This talk is available at:
+This talk is available at `https://github.com/PeterKDunn/2026-QANZIAM/tree/main`
 
 ![](./Images/TweedieGithubQR.png){fig-align="center"}
 
