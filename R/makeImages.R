@@ -1104,6 +1104,10 @@ plot(x    = j,
      xlab = expression(Summation~index~italic(j)), 
      ylab = expression(log[10]~of~terms) )
 
+# Axis
+abline(h = 0,
+       col = "grey")
+
 # Shade the summed terms
 rect(xleft   = summed[1], 
      ybottom = ylim[1] - 50, 
@@ -1134,18 +1138,21 @@ text(x    = xpos,
 # Poisson weight
 lines(x   = j, 
       y   = logPo * l10, 
+      col = plot_colour_light,
       lty = 2, 
       lwd = 3)
 
 # Incomplete gamma
 lines(x   = j, 
       y   = logFG * l10, 
+      col = plot_colour_light,
       lty = 3, 
       lwd = 3)
 
 # The summation terms
 lines(x   = j, 
       y   = logT  * l10, 
+      col = plot_colour,
       lwd = 3)
 box()
 
@@ -1167,7 +1174,7 @@ points(x   = jmax,
        pch = 21, 
        bg  = "white", 
        cex = 1.3)
-# White backgrpound to place text
+# White background to place text
 xpos   <- jmax * 2.15
 ypos   <- (Lmax * l10)
 xspace <- 60
@@ -1222,8 +1229,8 @@ legend("bottomright",
 
 dev.off()
 
-cat("lambda =", lambda, " j0 =", j0, " largest term at j =", jmax,
-    " summed range:", summed, "\n")
+#cat("lambda =", lambda, " j0 =", j0, " largest term at j =", jmax,
+#    " summed range:", summed, "\n")
 
 
 
@@ -1236,4 +1243,20 @@ cat("lambda =", lambda, " j0 =", j0, " largest term at j =", jmax,
 par( mar = c(5, 5, 4, 2) + 0.1,  # DEFAULT: 5.1 4.1 4.1 2.1
      mgp = c(3, 1, 0) )
 options(scipen = 0) # DEFAULT: 0
+
+
+
+###############################################################################
+library(qrcode)
+
+png("Images/TweedieGithubQR.png",
+    width = 8, 
+    height = 8,
+    units = "in",
+    res = 300)
+
+plot(qr_code("https://github.com/PeterKDunn/2026-QANZIAM/tree/main"))
+
+dev.off()
+
 
