@@ -134,8 +134,11 @@ Continuous data with exact zeros can appear for different reasons:
 **Censoring**
 
 - A detection or measurement limitation.
-- *Example*: Pollutant or chemical concentrations below the instrument’s detection limit.
 
+
+:::::{.example}
+Pollutant or chemical concentrations below the instrument’s detection limit.
+:::::
 :::
 
 ::: {.column width="50%" .fragment}
@@ -143,10 +146,14 @@ Continuous data with exact zeros can appear for different reasons:
 
 **Structure**
 
-- The structure of the data naturally leads to mixed data.
-- *Example*: Daily rainfall: \ day with no rain, amount exactly 0; otherwise a positive continuous amount.
+- Underlying structure leads to mixed data.
+
+:::::{.example}
+ Daily rainfall: \ day with no rain, amount exactly 0; otherwise a positive continuous amount.
+:::::
+
 :::
-:::
+::::
 
 
 
@@ -206,13 +213,11 @@ The probability distribution of a **Poisson sum of gamma variables**:
 
 ## PG models
 
-- _All_ EDMs have **mean** $\text{E}[Y] = \mu$.
-- _All_ EDMs have **variance** $\text{var}[Y] = \phi V(\mu)$, where:
+- EDMs have **mean** $\text{E}[Y] = \mu$.
+- EDMs have **variance** $\text{var}[Y] = \phi V(\mu)$, where:
 
-  ::: {.incremental}
   - $\phi > 0$ is some constant (the **dispersion parameter**);
   - $V(\mu)$ is the **variance function**, uniquely defining the EDM distribution.
-  :::
 
 
 
@@ -223,8 +228,8 @@ The probability distribution of a **Poisson sum of gamma variables**:
 
 | **Distribution**     | **Var fn $V(\mu)$** |
 |----------------------|---------------------|
-| Normal distribution  | $V(\mu) = 1$        |
-| Poisson distribution, if $\phi=1$ | $V(\mu) = \mu$ |
+| Normal distribution  | $V(\mu) = \mu^0 = 1$        |
+| Poisson distribution, if $\phi=1$ | $V(\mu) = \mu^1 = \mu$ |
 | Gamma distribution   | $V(\mu) = \mu^2$ |
 | Inverse Gaussian     | $V(\mu) = \mu^3$ |
 | 'Equivalent' to $y^* = 1/y$ transform in regression | $V(\mu) = \mu^4$ |
@@ -380,7 +385,7 @@ Use **CDF** $F_{\xi}(y)$ to:
 
 ## PDF evaluation: series
 
-- For $1 < \xi < 2$: PDF is written in terms of Wright's generalized Bessel function $W(y, \phi, \xi)$:
+- For $1 < \xi < 2$: PDF is in terms of Wright's generalized Bessel function $W(y, \phi, \xi)$:
 $$
   \sum_{j = 1}^\infty 
   \frac{y^{-j(2 - \xi)/(1 - \xi)} (\xi - 1)^{(2 - \xi)/(1 - \xi) j}}
@@ -388,17 +393,15 @@ $$
 $$
 
 - A similar expression exists for $\xi > 2$.
-- Messy, but evaluating in principle is easy: sum over many terms $j$.
-- Sometimes the terms are a *long way* from $j = 1$.
-- Sometimes a very large number of terms are needed.
+- Evaluating in principle is easy: sum over many terms $j$... but:
+   - Sometimes the terms are a *long way* from $j = 1$.
+   - Sometimes a very large number of terms are needed.
 - So **which** terms, and **how many** terms, must be summed?
 
 
 
 
 ## PDF evaluation: series strategy
-
-We directly sum the infinite series, only over the necessary terms:
 
 ::: {.fragment fragment-index=2}
 ::: {.nonincremental}
@@ -505,12 +508,12 @@ $$
 \begin{align*}
   f_Y(y) 
   &= 
-  \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ K_Y(it) - ity]\, dt\\
+  \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ \log M_Y(it) - ity]\, dt\\
   &=
   \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ k(t) ] \, dt
 \end{align*}
 $$
-where $i = \sqrt{-1}$, and $K_Y(t) = \log M_Y(t)$.
+where $i = \sqrt{-1}$.
 
 
 
@@ -521,9 +524,13 @@ where $i = \sqrt{-1}$, and $K_Y(t) = \log M_Y(t)$.
 
 - Extracting the **real components**:
 $$
-  f_Y(y) 
-  = 
-  \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ \Re k(t) ]\, \cos \Im k(it) \, dt,
+\begin{align*}
+f_Y(y) 
+  &= 
+  \frac{1}{2\pi} \int_{-\infty}^{\infty} \exp[ \Re k(t) ]\, \cos \Im k(it) \, dt\\
+  &= 
+  \frac{1}{\pi} \int_{0}^{\infty} \exp[ \Re k(t) ]\, \cos \Im k(it) \, dt,
+\end{align*}
 $$
 
 - This is an infinite, oscillating integral:
@@ -562,20 +569,20 @@ Areas in integration
 $$
   f_Y(y) 
   = 
-  \frac{1}{\pi} \int_{0}^{\infty} \exp[ \Re k(t) ]\, \cos \Im k(it) \, dt,
+  \frac{1}{\pi} \int_{0}^{\infty} \exp[ \Re k(t) ]\, \cos \Im k(it) \, dt
 $$
 
 - The integrand zeros occur when
 $$
-  \cos \Im k(t) = 0 \implies k(t) = \frac{\pi}{2} + m\pi\quad\text{for integer $m$.}
+  \cos \Im k(t) = 0 \implies \Im k(t) = \frac{\pi}{2} + m\pi\quad\text{for integer $m$.}
 $$
-- To find the zeros, the behaviour of $k(t)$ needs to be studied...
+- To find the zeros, the behaviour of $\Im k(t)$ needs to be studied...
 
 
 
 ## PDF evaluation: Fourier inversion
 
-$\tfrac{d}{dt} \Im k(t) < 0$, so solve $k(t) = \frac{\pi}{2} + m\pi$ for $m = -1, -2, ...$
+$\tfrac{d}{dt} \Im k(t) < 0$, so solve $\Im k(t) = \frac{\pi}{2} + m\pi$ for $m = -1, -2, ...$
 
 ![](./Images/Integration_Integrand_Imk_A.png){fig-align="center"}
 
@@ -584,7 +591,7 @@ $\tfrac{d}{dt} \Im k(t) < 0$, so solve $k(t) = \frac{\pi}{2} + m\pi$ for $m = -1
 
 ## PDF evaluation: Fourier inversion
 
-$\tfrac{d}{dt} \Im k(t) > 0$;  max. value $< \pi/2$, so solve $k(t) = \frac{\pi}{2} + m\pi$ for $m = -1, -2, ...$
+$\tfrac{d}{dt} \Im k(t) > 0$;  max. value $< \pi/2$, so solve $\Im k(t) = \frac{\pi}{2} + m\pi$ for $m = -1, -2, ...$
 
 ![](./Images/Integration_Integrand_Imk_B.png){fig-align="center"}
 
@@ -593,7 +600,7 @@ $\tfrac{d}{dt} \Im k(t) > 0$;  max. value $< \pi/2$, so solve $k(t) = \frac{\pi}
 
 ## PDF evaluation: Fourier inversion
 
-$\tfrac{d}{dt} \Im k(t) > 0$; max. value $\ge \pi/2$, so solve $k(t) = \frac{\pi}{2} + m\pi$ for  $m = 0, 0 -1, ...$
+$\tfrac{d}{dt} \Im k(t) > 0$; max. value $\ge \pi/2$, so solve $\Im k(t) = \frac{\pi}{2} + m\pi$ for  $m = 0, 0 -1, ...$
 
 ![](./Images/Integration_Integrand_Imk_C.png){fig-align="center"}
 
@@ -643,9 +650,6 @@ $\tfrac{d}{dt} \Im k(t) > 0$; max. value $\ge \pi/2$, so solve $k(t) = \frac{\pi
 
 
 
-
-
-
 ## PDF evaluation: Fourier inversion
 
 ::: {.nonincremental}
@@ -663,7 +667,7 @@ $\tfrac{d}{dt} \Im k(t) > 0$; max. value $\ge \pi/2$, so solve $k(t) = \frac{\pi
 
 
 
-## PDF evaluation: acceleration techniques
+## PDF evaluation: acceleration
 
 ::: {.content-visible when-format="revealjs"}
 ![](./Images/IntegrationCumulative_animation.gif){fig-align="center"}
@@ -704,7 +708,7 @@ Areas as series
 
 ## PDF evaluation: finding the zeros
 
-Solve $k(t) = \frac{\pi}{2} + m\pi$ for $m = -1, -1, -1, -2, -2, -2, -3, ...$
+Solve $\Im k(t) = \frac{\pi}{2} + m\pi$ for $m = -1, -1, -1, -2, -2, -2, -3, ...$
 
 
 ![](./Images/Integration_Integrand_Imk_TRICKY.png){fig-align="center"}
@@ -756,7 +760,7 @@ Oscillations tend to cosine as $t\to\infty$, but this may take a while...
 ## DF evaluation: strategies for $\xi>2$
 
 - The DF requires high relative accuracy, often in the extreme tails of the distribution.
-- **Fourier inversion** has similar ideas at PDF (zero finding; acceleration).
+- **Fourier inversion** has similar ideas as PDF (zero finding; acceleration).
   - Integrand is a damped sin-curve rather than a damped cos-curve.
   - But Fourier inversion has good *absolute* accuracy, but not good *relative* accuracy in the extreme tails.
   - Instead, **direct integration** is useful is the tails.
@@ -846,6 +850,7 @@ $d(y,\mu)$ is the unit deviance; $\Phi$ and $\varphi$ are the standard normal PD
 
 
 - $n = 68$ July totals.
+- Monthly rainfall is a positive continuous quantity when it falls, or exactly zero when there is no rain.
 - Exactly zero rainfall recorded for 20 months (29%).
 
 :::
