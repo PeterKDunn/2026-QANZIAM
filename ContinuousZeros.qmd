@@ -3,7 +3,7 @@ title: "Numerical evaluation of Tweedie probability functions"
 subtitle: "QANZIAM"
 author: "Peter K. Dunn"
 institute: "University of the Sunshine Coast"
-date: today
+date: "16 November 2026"
 date-format: "D MMMM YYYY"
 format:
   revealjs:
@@ -299,7 +299,7 @@ Tweedie PDF examples
 ::: {.nonincremental}
 The Tweedie family is a three-parameter family of distributions:
 
-- $\mu > 0$ (the **mean**);
+- $\mu$ (the **mean**);
 - $\phi > 0$ (the **dispersion parameter**);
 - $\xi$ (the **index parameter**: *which* Tweedie distribution, sometimes denoted as $p$).
 :::
@@ -324,7 +324,7 @@ The Tweedie family is a three-parameter family of distributions:
 
 
 :::: {.columns}
-::: {.column width="45%" .fragment}
+::: {.column width="50%" .fragment}
 Use **PDF** $f_{\xi}(y)$ to:
 
 - **estimate** a value for $\xi$ (and hence fitting a model...).
@@ -332,10 +332,8 @@ Use **PDF** $f_{\xi}(y)$ to:
 - **compute** the AIC.
 :::
 
-::: {.column width="5%" .fragment}
-:::
 
-::: {.column width="45%" .fragment}
+::: {.column width="50%" .fragment}
 Use **CDF** $F_{\xi}(y)$ to:
 
 - **evaluate models**: computing quantiles and $p$-values.
@@ -355,7 +353,7 @@ Use **CDF** $F_{\xi}(y)$ to:
 
 
 :::: {.columns}
-::: {.column width="45%" .fragment}
+::: {.column width="50%" .fragment}
 
 **Tweedie PDFs** must be, in general, evaluated numerically:
 
@@ -364,10 +362,7 @@ Use **CDF** $F_{\xi}(y)$ to:
 - Infinite oscillating integrals [@dunnEvaluationTweedieExponential2008].
 :::
 
-::: {.column width="5%" .fragment}
-:::
-
-::: {.column width="45%" .fragment}
+::: {.column width="50%" .fragment}
 **Tweedie DFs** must be evaluated numerically [@dunnEvaluationTweedieExponentialCDF2026] :
 
 - Saddlepoint *approximation*: accurate for small dispersion $\phi$. 
@@ -619,7 +614,7 @@ $\tfrac{d}{dt} \Im k(t) > 0$; max. value $\ge \pi/2$, so solve $\Im k(t) = \frac
 
 
 :::: {.columns}
-::: {.column width="45%"}
+::: {.column width="50%"}
 ![](./Icons/iconmonstr-smiley-2-240.png){fig-align="center" width="30%"}
 
 **In principle**, the algorithm is simple:
@@ -628,13 +623,9 @@ $\tfrac{d}{dt} \Im k(t) > 0$; max. value $\ge \pi/2$, so solve $\Im k(t) = \frac
 - Find the area of each integrand (numerical quadrature)...
 - Sum the areas.
 
-
 :::
 
-::: {.column width="5%" .fragment}
-:::
-
-::: {.column width="45%" .fragment}
+::: {.column width="50%" .fragment}
 ![](./Icons/iconmonstr-smiley-4-240.png){fig-align="center" width="30%"}
 
 **Challenges**: 
@@ -824,7 +815,7 @@ $d(y,\mu)$ is the unit deviance; $\Phi$ and $\varphi$ are the standard normal PD
 
 
 :::: {.columns}
-::: {.column width="45%"}
+::: {.column width="50%"}
 
 ::: {.nonincremental}
 - Total July rainfall at Quilpie:
@@ -842,10 +833,8 @@ $d(y,\mu)$ is the unit deviance; $\Phi$ and $\varphi$ are the standard normal PD
 
 :::
 
-::: {.column width="5%" .fragment}
-:::
 
-::: {.column width="45%" .fragment}
+::: {.column width="50%" .fragment}
 
 
 
